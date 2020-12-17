@@ -1,2 +1,2 @@
-rootProject.name = "sipichan"
+rootProject.name = "sipichan-plugin"
 

@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>org.example.sipichan</id>
+    <id>com.makentoshe.sipichan-plugin</id>
     <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="mkliverout@gmail.com" url="http://github.com/Makentoshe">Makentoshe</vendor>
 
     <description><![CDATA[
     Enter short description for your plugin here.<br>
@@ -14,13 +14,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <moduleBuilder builderClass="com.makentoshe.sipichan.plugin.DemoModuleWizardStep" id="DEMO_STEP" order="first"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="com.makentoshe.sipichan.TestPopupDialogAction" class="com.makentoshe.sipichan.TestPopupDialogAction"
-            text="Test Popup Dialog Action" description="Sasasaanuspsa">
-            <add-to-group group-id="ToolsMenu" anchor="first" />
-        </action>
     </actions>
 </idea-plugin>
