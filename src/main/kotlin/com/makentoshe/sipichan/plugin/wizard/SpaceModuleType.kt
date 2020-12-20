@@ -5,17 +5,17 @@ import com.intellij.openapi.module.ModuleTypeManager
 import com.makentoshe.sipichan.plugin.IconProvider
 import javax.swing.Icon
 
-class DemoModuleType: ModuleType<DemoModuleBuilder>(id) {
+class SpaceModuleType: ModuleType<SpaceModuleBuilder>(id) {
 
     companion object {
         // TODO(refactor) Specify module id
         private const val id = "DEMO_MODULE_TYPE"
 
-        fun getInstance() = ModuleTypeManager.getInstance().findByID(id) as DemoModuleType
+        fun getInstance() = ModuleTypeManager.getInstance().findByID(id) as SpaceModuleType
     }
 
-    override fun createModuleBuilder(): DemoModuleBuilder {
-        return DemoModuleBuilder()
+    override fun createModuleBuilder(): SpaceModuleBuilder {
+        return SpaceModuleBuilder()
     }
 
     override fun getName(): String {

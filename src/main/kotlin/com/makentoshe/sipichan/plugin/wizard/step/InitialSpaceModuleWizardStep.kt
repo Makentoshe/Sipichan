@@ -4,12 +4,16 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.Disposable
 import com.makentoshe.sipichan.plugin.StringsBundle
-import javax.swing.*
+import com.makentoshe.sipichan.plugin.wizard.model.SpaceTemplateListModel
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JList
+import javax.swing.JPanel
 import javax.swing.event.ListSelectionEvent
 
 // https://github.com/JetBrains/intellij-community/blob/master/plugins/gradle/java/src/service/project/wizard/GradleModuleWizardStep.form
 // https://github.com/JetBrains/intellij-community/blob/master/plugins/gradle/java/src/service/project/wizard/GradleModuleWizardStep.java
-class InitialModuleWizardStep(
+class InitialSpaceModuleWizardStep(
     private val context: WizardContext,
     private val disposable: Disposable
 ) : ModuleWizardStep() {
@@ -18,9 +22,11 @@ class InitialModuleWizardStep(
 
     // Model list described in form file
     private lateinit var list: JList<String>
+
+    // Bottom panel with template description
     private lateinit var listOptionDescriptionLabel: JLabel
 
-    // TODO(feat): specify template choose ui
+    // TODO improve template specify choose
     override fun getComponent(): JComponent {
         list.model = SpaceTemplateListModel()
         list.addListSelectionListener(::onListSelectionEvent)
@@ -32,24 +38,13 @@ class InitialModuleWizardStep(
 
     private fun onListSelectionEvent(event: ListSelectionEvent) {
         if (event.valueIsAdjusting) return
-        listOptionDescriptionLabel.text = when(list.selectedIndex) {
+
+        listOptionDescriptionLabel.text = when (list.selectedIndex) {
             0 -> StringsBundle.string("space.wizard.template.empty.description")
             1 -> StringsBundle.string("space.wizard.template.chatbot.description")
             2 -> StringsBundle.string("space.wizard.template.slashcommand.description")
             else -> throw IllegalArgumentException()
         }
     }
-}
-
-class SpaceTemplateListModel: AbstractListModel<String>() {
-
-    override fun getElementAt(index: Int): String = when(index) {
-        0 -> StringsBundle.string("space.wizard.template.empty.title")
-        1 -> StringsBundle.string("space.wizard.template.chatbot.title")
-        2 -> StringsBundle.string("space.wizard.template.slashcommand.title")
-        else -> throw IllegalArgumentException()
-    }
-
-    override fun getSize() = 3
 }
 

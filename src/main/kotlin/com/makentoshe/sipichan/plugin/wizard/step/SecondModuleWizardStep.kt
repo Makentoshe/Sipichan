@@ -1,12 +1,12 @@
-package com.makentoshe.sipichan.plugin.wizard
+package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-class FirstModuleWizardStep : ModuleWizardStep() {
+class SecondModuleWizardStep : ModuleWizardStep() {
     override fun getComponent(): JComponent {
-        return JLabel("Put your content here (Step 1)")
+        return JLabel("Put your content here (Step 2)")
     }
 
     override fun updateDataModel() {}
