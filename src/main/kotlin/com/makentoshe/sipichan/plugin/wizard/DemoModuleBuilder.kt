@@ -1,4 +1,4 @@
-package com.makentoshe.sipichan.plugin
+package com.makentoshe.sipichan.plugin.wizard
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
