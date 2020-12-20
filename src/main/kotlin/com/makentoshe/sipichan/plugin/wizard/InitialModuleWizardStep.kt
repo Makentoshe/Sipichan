@@ -4,6 +4,7 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.Disposable
 import javax.swing.JComponent
+import javax.swing.JLabel
 import javax.swing.JList
 import javax.swing.JPanel
 
@@ -16,9 +17,11 @@ class InitialModuleWizardStep(
 
     private lateinit var root: JPanel
     private lateinit var list: JList<String>
+    private lateinit var listOptionDescriptionLabel: JLabel
 
     // TODO(feat): specify template choose ui
     override fun getComponent(): JComponent {
+        list.selectedIndex = 0
         return root
     }
 
