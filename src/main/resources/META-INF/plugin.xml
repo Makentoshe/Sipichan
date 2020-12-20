@@ -1,12 +1,11 @@
 <idea-plugin>
     <id>com.makentoshe.sipichan-plugin</id>
-    <name>Plugin display name here</name>
+    <!--suppress PluginXmlValidity -->
+    <name>Sipichan - Space Development Plugin</name>
     <vendor email="mkliverout@gmail.com" url="http://github.com/Makentoshe">Makentoshe</vendor>
 
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+    <!--suppress PluginXmlValidity -->
+    <description>Sas</description>
 
     <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -14,7 +13,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <moduleBuilder builderClass="com.makentoshe.sipichan.plugin.DemoModuleWizardStep" id="DEMO_STEP" order="first"/>
+        <moduleType id="DEMO_MODULE_TYPE" implementationClass="com.makentoshe.sipichan.plugin.DemoModuleType"/>
     </extensions>
 
     <actions>
