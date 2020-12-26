@@ -5,22 +5,24 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.module.ModuleType
-import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.makentoshe.sipichan.plugin.wizard.step.FirstModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SecondModuleWizardStep
 import java.io.File
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Path
 
 class SpaceModuleBuilder : ModuleBuilder() {
+
+    // TODO add attributes define
+    private val attributes = mapOf(
+        "GRADLE_GROUP_ID" to "com.makentoshe",
+        "GRADLE_ARTIFACT_ID" to "sipichan",
+        "GRADLE_VERSION" to "1.0.0"
+    )
 
     override fun getModuleType(): ModuleType<*> {
         return SpaceModuleType.getInstance()
@@ -44,6 +46,7 @@ class SpaceModuleBuilder : ModuleBuilder() {
         println(project)
         println(module)
         setupBuildGradleFile(virtualRootDirectory)
+        setupSettingsGradleFile(virtualRootDirectory)
     }
 
     override fun createWizardSteps(
@@ -58,44 +61,12 @@ class SpaceModuleBuilder : ModuleBuilder() {
     }
 
     private fun setupBuildGradleFile(projectRoot: VirtualFile) {
-        val title = "build.gradle"
-        val file = try {
-            createVirtualFile(projectRoot, title)
-        } catch (exception: IOException) {
-            throw ConfigurationException(exception.message)
-        }
-
-        // TODO add attributes define
-        val attributes = mapOf(
-            "GRADLE_GROUP_ID" to "com.makentoshe",
-            "GRADLE_ARTIFACT_ID" to "sipichan",
-            "GRADLE_VERSION" to "1.0.0"
-        )
-        val buildGradleTemplate = SpaceFileTemplate.BuildGradleTemplate
-        val text = buildGradleTemplate.getText(attributes)
-        VfsUtil.saveText(file, text)
+        SpaceFileTemplate.Factory(SpaceFileTemplate.BuildGradleTemplate, attributes)
+            .create("build.gradle", projectRoot)
     }
 
-    private fun createVirtualFile(parent: VirtualFile, title: String): VirtualFile {
-        val file = createFile(parent.toNioPath(), title)
-
-        // Todo specify message
-        val virtualFile = VfsUtil.findFile(file, true)
-            ?: throw ConfigurationException("VirtualFile($parent/$title) is null")
-
-        // Todo specify message
-        if (virtualFile.isDirectory) {
-            throw ConfigurationException("VirtualFile($parent/$title) is directory")
-        }
-
-        VfsUtil.markDirtyAndRefresh(false, false, false, virtualFile)
-        return virtualFile
+    private fun setupSettingsGradleFile(projectRoot: VirtualFile) {
+        SpaceFileTemplate.Factory(SpaceFileTemplate.SettingsGradleTemplate, attributes)
+            .create("settings.gradle", projectRoot)
     }
-
-    private fun createFile(parent: Path, title: String) = parent.resolve(title).also { file ->
-        Files.deleteIfExists(file)
-        Files.createDirectories(parent)
-        Files.createFile(file)
-    }
-
 }
