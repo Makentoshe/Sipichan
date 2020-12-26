@@ -18,7 +18,7 @@ import com.makentoshe.sipichan.plugin.wizard.step.SecondModuleWizardStep
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
-
+import java.nio.file.Path
 
 class SpaceModuleBuilder : ModuleBuilder() {
 
@@ -43,7 +43,7 @@ class SpaceModuleBuilder : ModuleBuilder() {
         val module = modifiableRootModel.module
         println(project)
         println(module)
-        setupTestFile(virtualRootDirectory)
+        setupBuildGradleFile(virtualRootDirectory)
     }
 
     override fun createWizardSteps(
@@ -57,28 +57,34 @@ class SpaceModuleBuilder : ModuleBuilder() {
         return InitialSpaceModuleWizardStep(context, parentDisposable)
     }
 
-    private fun setupTestFile(projectRoot: VirtualFile) {
+    private fun setupBuildGradleFile(projectRoot: VirtualFile) {
         val title = "build.gradle"
         val file = try {
-            createVirtualFile(projectRoot, "gradle.build.sas")
+            createVirtualFile(projectRoot, title)
         } catch (exception: IOException) {
             throw ConfigurationException(exception.message)
         }
 
-        println(file)
+        // TODO add attributes define
+        val attributes = mapOf(
+            "GRADLE_GROUP_ID" to "com.makentoshe",
+            "GRADLE_ARTIFACT_ID" to "sipichan",
+            "GRADLE_VERSION" to "1.0.0"
+        )
+        val buildGradleTemplate = SpaceFileTemplate.BuildGradleTemplate
+        val text = buildGradleTemplate.getText(attributes)
+        VfsUtil.saveText(file, text)
     }
 
     private fun createVirtualFile(parent: VirtualFile, title: String): VirtualFile {
-        val file = parent.toNioPath().resolve(title)
+        val file = createFile(parent.toNioPath(), title)
 
-        Files.createDirectories(file.parent)
-        Files.createFile(file)
-
-        val virtualFile = VfsUtil.findFile(file, true)
         // Todo specify message
+        val virtualFile = VfsUtil.findFile(file, true)
             ?: throw ConfigurationException("VirtualFile($parent/$title) is null")
+
+        // Todo specify message
         if (virtualFile.isDirectory) {
-            // Todo specify message
             throw ConfigurationException("VirtualFile($parent/$title) is directory")
         }
 
@@ -86,5 +92,10 @@ class SpaceModuleBuilder : ModuleBuilder() {
         return virtualFile
     }
 
-}
+    private fun createFile(parent: Path, title: String) = parent.resolve(title).also { file ->
+        Files.deleteIfExists(file)
+        Files.createDirectories(parent)
+        Files.createFile(file)
+    }
 
+}
