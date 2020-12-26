@@ -47,6 +47,7 @@ class SpaceModuleBuilder : ModuleBuilder() {
         println(module)
         setupBuildGradleFile(virtualRootDirectory)
         setupSettingsGradleFile(virtualRootDirectory)
+        setupGradlePropertiesFile(virtualRootDirectory)
     }
 
     override fun createWizardSteps(
@@ -68,5 +69,10 @@ class SpaceModuleBuilder : ModuleBuilder() {
     private fun setupSettingsGradleFile(projectRoot: VirtualFile) {
         SpaceFileTemplate.Factory(SpaceFileTemplate.SettingsGradleTemplate, attributes)
             .create("settings.gradle", projectRoot)
+    }
+
+    private fun setupGradlePropertiesFile(projectRoot: VirtualFile) {
+        SpaceFileTemplate.Factory(SpaceFileTemplate.GradlePropertiesTemplate, attributes)
+            .create("gradle.properties", projectRoot)
     }
 }

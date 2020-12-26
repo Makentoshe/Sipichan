@@ -32,6 +32,15 @@ object SpaceFileTemplate {
             }
         }
 
+    /** gradle.properties file template */
+    val GradlePropertiesTemplate: FileTemplate
+        get() = getOrCreateTemplate("gradle") { name ->
+            templateManager.addTemplate(name, "properties").also { template ->
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle.properties.ft")
+                template.text = String(stream!!.readBytes())
+            }
+        }
+
     private fun getOrCreateTemplate(name: String, create: (String) -> FileTemplate): FileTemplate {
         return templateManager.getTemplate(name) ?: create(name)
     }
