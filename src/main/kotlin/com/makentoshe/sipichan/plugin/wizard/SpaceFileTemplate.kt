@@ -18,7 +18,7 @@ object SpaceFileTemplate {
     val BuildGradleTemplate: FileTemplate
         get() = getOrCreateTemplate("build") { name ->
             templateManager.addTemplate(name, "gradle").also { template ->
-                val stream = javaClass.classLoader.getResourceAsStream("/templates/build.gradle.ft")
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle/build.gradle.ft")
                 template.text = String(stream!!.readBytes())
             }
         }
@@ -27,7 +27,7 @@ object SpaceFileTemplate {
     val SettingsGradleTemplate: FileTemplate
         get() = getOrCreateTemplate("settings") { name ->
             templateManager.addTemplate(name, "gradle").also { template ->
-                val stream = javaClass.classLoader.getResourceAsStream("/templates/settings.gradle.ft")
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle/settings.gradle.ft")
                 template.text = String(stream!!.readBytes())
             }
         }
@@ -36,7 +36,7 @@ object SpaceFileTemplate {
     val GradlePropertiesTemplate: FileTemplate
         get() = getOrCreateTemplate("gradle") { name ->
             templateManager.addTemplate(name, "properties").also { template ->
-                val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle.properties.ft")
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle/gradle.properties.ft")
                 template.text = String(stream!!.readBytes())
             }
         }
@@ -47,13 +47,14 @@ object SpaceFileTemplate {
 
     class Factory(private val template: FileTemplate, private val attributes: Map<String, String>) {
 
-        fun create(title: String, projectRoot: VirtualFile) {
+        fun create(title: String, projectRoot: VirtualFile): VirtualFile {
             val file = try {
                 createVirtualFile(projectRoot, title)
             } catch (exception: IOException) {
                 throw ConfigurationException(exception.message)
             }
             VfsUtil.saveText(file, template.getText(attributes))
+            return file
         }
 
         private fun createVirtualFile(parent: VirtualFile, title: String): VirtualFile {

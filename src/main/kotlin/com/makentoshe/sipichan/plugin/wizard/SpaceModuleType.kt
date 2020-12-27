@@ -3,6 +3,7 @@ package com.makentoshe.sipichan.plugin.wizard
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.module.ModuleTypeManager
 import com.makentoshe.sipichan.plugin.IconProvider
+import com.makentoshe.sipichan.plugin.wizard.strategy.GradleSpaceModuleBuilderStrategy
 import javax.swing.Icon
 
 class SpaceModuleType: ModuleType<SpaceModuleBuilder>(id) {
@@ -15,7 +16,8 @@ class SpaceModuleType: ModuleType<SpaceModuleBuilder>(id) {
     }
 
     override fun createModuleBuilder(): SpaceModuleBuilder {
-        return SpaceModuleBuilder()
+        // TODO add switching between build systems
+        return SpaceModuleBuilder(GradleSpaceModuleBuilderStrategy())
     }
 
     override fun getName(): String {
