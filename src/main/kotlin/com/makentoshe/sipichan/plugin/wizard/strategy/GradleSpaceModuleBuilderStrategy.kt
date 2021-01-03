@@ -16,7 +16,6 @@ import com.makentoshe.sipichan.plugin.wizard.SpaceFileTemplate
 import java.io.File
 import java.nio.file.Path
 
-
 class GradleSpaceModuleBuilderStrategy : SpaceModuleBuilderStrategy {
 
     // TODO add attributes define
@@ -56,12 +55,12 @@ class GradleSpaceModuleBuilderStrategy : SpaceModuleBuilderStrategy {
     private fun setupGradleBinaries(projectRoot: VirtualFile) {
         setupGradleBinary(projectRoot, "gradlew.bat")
         setupGradleBinary(projectRoot, "gradlew")
-        setupGradleBinary(projectRoot, "wrapper/gradle-wrapper.jar")
-        setupGradleBinary(projectRoot, "wrapper/gradle-wrapper.properties")
+        setupGradleBinary(projectRoot, "gradle/wrapper/gradle-wrapper.jar")
+        setupGradleBinary(projectRoot, "gradle/wrapper/gradle-wrapper.properties")
     }
 
     private fun setupGradleBinary(projectRoot: VirtualFile, location: String) {
-        val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle/binary/$location")
+        val stream = javaClass.classLoader.getResourceAsStream("/binaries/gradle/$location")
         val file = File(projectRoot.toNioPath().toFile(), location)
         file.parentFile?.mkdirs()
         assert(file.createNewFile())
@@ -70,32 +69,35 @@ class GradleSpaceModuleBuilderStrategy : SpaceModuleBuilderStrategy {
 
     override fun setupModule(module: Module) {
         ApplicationManager.getApplication().invokeLater({
-            // load preview project
-            val previewSpec = ImportSpecBuilder(module.project, ProjectSystemId.findById("GRADLE")!!)
-            previewSpec.usePreviewMode()
-            previewSpec.use(MODAL_SYNC)
-            previewSpec.callback(ImportSpecBuilder.DefaultProjectRefreshCallback(previewSpec.build()))
-            ExternalSystemUtil.refreshProject(virtualRootDirectory.toNioPath().systemIndependentPath, previewSpec)
-
-            // open gradle.build file on startup
-            val psiManager = PsiManager.getInstance(module.project)
-            val psiFile = psiManager.findFile(buildGradleFile)
-            if (psiFile != null) EditorHelper.openInEditor(psiFile)
-
-            // reload project
-            ExternalProjectsManagerImpl.getInstance(module.project).runWhenInitialized {
-                val importSpec = ImportSpecBuilder(module.project, ProjectSystemId.findById("GRADLE")!!)
-                // TODO importSpec.createDirectoriesForEmptyContentRoots()
-                importSpec.callback(ImportSpecBuilder.DefaultProjectRefreshCallback(importSpec.build()))
-                ExternalSystemUtil.refreshProject(virtualRootDirectory.toNioPath().systemIndependentPath, importSpec)
-            }
+            loadPreviewProject(module)
+            openFileOnStartup(module, buildGradleFile)
+            reloadProject(module)
         }, ModalityState.NON_MODAL, module.project.disposed)
+    }
+
+    private fun loadPreviewProject(module: Module) {
+        val previewSpec = ImportSpecBuilder(module.project, ProjectSystemId.findById("GRADLE")!!)
+        previewSpec.usePreviewMode()
+        previewSpec.use(MODAL_SYNC)
+        previewSpec.callback(ImportSpecBuilder.DefaultProjectRefreshCallback(previewSpec.build()))
+        ExternalSystemUtil.refreshProject(virtualRootDirectory.toNioPath().systemIndependentPath, previewSpec)
+    }
+
+    private fun openFileOnStartup(module: Module, file: VirtualFile) {
+        val psiManager = PsiManager.getInstance(module.project)
+        val psiFile = psiManager.findFile(file)
+        if (psiFile != null) EditorHelper.openInEditor(psiFile)
+    }
+
+    private fun reloadProject(module: Module) {
+        ExternalProjectsManagerImpl.getInstance(module.project).runWhenInitialized {
+            val importSpec = ImportSpecBuilder(module.project, ProjectSystemId.findById("GRADLE")!!)
+            // TODO importSpec.createDirectoriesForEmptyContentRoots()
+            importSpec.callback(ImportSpecBuilder.DefaultProjectRefreshCallback(importSpec.build()))
+            ExternalSystemUtil.refreshProject(virtualRootDirectory.toNioPath().systemIndependentPath, importSpec)
+        }
     }
 
     private val Path.systemIndependentPath: String
         get() = toString().replace(File.separatorChar, '/')
-
-    // TODO(createWrapper function)
-    // https://github.com/JetBrains/intellij-community/blob/master/plugins/gradle/java/src/service/project/wizard/AbstractGradleModuleBuilder.java
 }
-
