@@ -1,0 +1,13 @@
+package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
+
+import io.ktor.application.*
+
+fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
+
+@Suppress("unused") // Referenced in application.conf
+@kotlin.jvm.JvmOverloads
+fun Application.module(testing: Boolean = false) {
+    // TODO(not implemented)
+}
+
+

@@ -18,11 +18,10 @@ class SpaceModuleType: ModuleType<SpaceModuleBuilder>(id) {
     }
 
     override fun createModuleBuilder(): SpaceModuleBuilder {
-
         // TODO add switching between build systems
         // TODO hardcoded (add properties define)
         val gradleProperties = GradleSpaceModuleBuilderProperties("com.makentoshe", "sipichan", "1.0.0")
-        val sourceProvider = EmptyProjectSourceProvider()
+        val sourceProvider = EmptyProjectSourceProvider(gradleProperties)
         val gradleStrategy = GradleSpaceModuleBuilderStrategy(gradleProperties, sourceProvider)
         return SpaceModuleBuilder(gradleStrategy)
     }

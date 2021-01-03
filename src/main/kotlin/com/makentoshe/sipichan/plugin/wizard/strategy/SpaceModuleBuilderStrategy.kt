@@ -29,6 +29,7 @@ interface SpaceModuleBuilderStrategy {
     fun setupModule(module: Module)
 }
 
+// TODO move Gradle files
 class GradleSpaceModuleBuilderStrategy(
     private val properties: GradleSpaceModuleBuilderProperties,
     private val sourceProvider: ProjectSourceProvider
@@ -44,6 +45,8 @@ class GradleSpaceModuleBuilderStrategy(
         setupSettingsGradleFile(virtualRootDirectory)
         setupGradlePropertiesFile(virtualRootDirectory)
         setupGradleBinaries(virtualRootDirectory)
+
+        sourceProvider.buildProjectSourceFiles(modifiableRootModel, virtualRootDirectory)
     }
 
     private fun setupBuildGradleFile(projectRoot: VirtualFile) {
@@ -78,7 +81,6 @@ class GradleSpaceModuleBuilderStrategy(
 
     override fun setupModule(module: Module) {
         ApplicationManager.getApplication().invokeLater({
-            sourceProvider.buildProjectSourceFiles(module)
             loadPreviewProject(module)
             openFileOnStartup(module, buildGradleFile)
             reloadProject(module)

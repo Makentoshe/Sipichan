@@ -41,6 +41,33 @@ object SpaceFileTemplate {
             }
         }
 
+    /** resources/logback.xml file template */
+    val MainLogbackXmlTemplate: FileTemplate
+        get() = getOrCreateTemplate("logback") { name ->
+            templateManager.addTemplate(name, "xml").also { template ->
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/project/logback.xml")
+                template.text = String(stream!!.readBytes())
+            }
+        }
+
+    /** resources/application.conf file template */
+    val MainApplicationConfTemplate: FileTemplate
+        get() = getOrCreateTemplate("application") { name ->
+            templateManager.addTemplate(name, "conf").also { template ->
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/project/application.conf.ft")
+                template.text = String(stream!!.readBytes())
+            }
+        }
+
+    /** src/Application.kt file template */
+    val MainApplicationKtTemplate: FileTemplate
+        get() = getOrCreateTemplate("Application") { name ->
+            templateManager.addTemplate(name, "kt").also { template ->
+                val stream = javaClass.classLoader.getResourceAsStream("/templates/project/empty/Application.kt.ft")
+                template.text = String(stream!!.readBytes())
+            }
+        }
+
     private fun getOrCreateTemplate(name: String, create: (String) -> FileTemplate): FileTemplate {
         return templateManager.getTemplate(name) ?: create(name)
     }
