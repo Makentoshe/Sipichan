@@ -72,7 +72,7 @@ class GradleSpaceModuleBuilderStrategy(
     }
 
     private fun setupGradleBinary(projectRoot: VirtualFile, location: String) {
-        val stream = javaClass.classLoader.getResourceAsStream("/binaries/gradle/$location")
+        val stream = javaClass.classLoader.getResourceAsStream("/templates/gradle/$location")
         val file = File(projectRoot.toNioPath().toFile(), location)
         file.parentFile?.mkdirs()
         assert(file.createNewFile())
