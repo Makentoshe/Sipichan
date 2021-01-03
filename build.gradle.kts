@@ -19,8 +19,15 @@ dependencies {
 intellij {
     version = "2020.3"
 }
+
+val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
+// Allows to call a static methods in Java interfaces
+compileKotlin.kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-    changeNotes("""
+    changeNotes(
+        """
       Add change notes here.<br>
-      <em>most HTML tags may be used</em>""")
+      <em>most HTML tags may be used</em>"""
+    )
 }
