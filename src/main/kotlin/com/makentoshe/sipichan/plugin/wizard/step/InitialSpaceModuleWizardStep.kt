@@ -40,7 +40,7 @@ class InitialSpaceModuleWizardStep(
         if (event.valueIsAdjusting) return
 
         listOptionDescriptionLabel.text = when (list.selectedIndex) {
-            0 -> StringsBundle.string("space.wizard.template.empty.description")
+            0 -> StringsBundle.string("space.wizard.template.blank.description")
             1 -> StringsBundle.string("space.wizard.template.chatbot.description")
             2 -> StringsBundle.string("space.wizard.template.slashcommand.description")
             else -> throw IllegalArgumentException()
