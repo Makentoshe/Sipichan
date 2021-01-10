@@ -4,6 +4,6 @@ ktor {
         port = ${?PORT}
     }
     application {
-        modules = [ ${GRADLE_GROUP_ID}.ApplicationKt.module ]
+        modules = [ ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}.ApplicationKt.module ]
     }
 }
