@@ -8,7 +8,7 @@ import com.makentoshe.sipichan.plugin.wizard.SpaceFileTemplate
 import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderProperties
 import java.io.File
 
-class EmptyProjectSourceProvider(private val properties: SpaceModuleBuilderProperties) : ProjectSourceProvider() {
+class BlankProjectSourceProvider(private val properties: SpaceModuleBuilderProperties) : ProjectSourceProvider() {
 
     override fun buildProjectSourceFiles(modifiableRootModel: ModifiableRootModel, virtualRootDirectory: VirtualFile) {
         val srcDirectory = File(virtualRootDirectory.path, "src")
