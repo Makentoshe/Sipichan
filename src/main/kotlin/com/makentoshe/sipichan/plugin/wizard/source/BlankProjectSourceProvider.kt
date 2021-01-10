@@ -4,8 +4,9 @@ import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.makentoshe.sipichan.plugin.wizard.SpaceFileTemplate
 import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderProperties
+import com.makentoshe.sipichan.plugin.wizard.template.BlankProjectFilesTemplate
+import com.makentoshe.sipichan.plugin.wizard.template.SpaceFilesTemplate
 import java.io.File
 
 class BlankProjectSourceProvider(private val properties: SpaceModuleBuilderProperties) : ProjectSourceProvider() {
@@ -23,19 +24,19 @@ class BlankProjectSourceProvider(private val properties: SpaceModuleBuilderPrope
 
     private fun createApplicationKtFile(parent: File) {
         val applicationFile = createVirtualFile(parent.path, "Application.kt")
-        val applicationContent = SpaceFileTemplate.MainApplicationKtTemplate.getText(properties.attributes())
+        val applicationContent = BlankProjectFilesTemplate.ApplicationKtTemplate.getText(properties.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 
     private fun createLogbackXmlFile(parent: File) {
         val applicationFile = createVirtualFile(parent.path, "logback.xml")
-        val applicationContent = SpaceFileTemplate.MainLogbackXmlTemplate.getText(properties.attributes())
+        val applicationContent = SpaceFilesTemplate.LogbackXmlTemplate.getText(properties.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 
     private fun createApplicationConfFile(parent: File) {
         val applicationFile = createVirtualFile(parent.path, "application.conf")
-        val applicationContent = SpaceFileTemplate.MainApplicationConfTemplate.getText(properties.attributes())
+        val applicationContent = SpaceFilesTemplate.ApplicationConfTemplate.getText(properties.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 }

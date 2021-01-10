@@ -17,8 +17,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
-import com.makentoshe.sipichan.plugin.wizard.SpaceFileTemplate
 import com.makentoshe.sipichan.plugin.wizard.source.ProjectSourceProvider
+import com.makentoshe.sipichan.plugin.wizard.template.FilesTemplate
+import com.makentoshe.sipichan.plugin.wizard.template.GradleFilesTemplate
 import java.io.File
 import java.nio.file.Path
 
@@ -50,17 +51,17 @@ class GradleSpaceModuleBuilderStrategy(
     }
 
     private fun setupBuildGradleFile(projectRoot: VirtualFile) {
-        buildGradleFile = SpaceFileTemplate.Factory(SpaceFileTemplate.BuildGradleTemplate, properties.attributes())
+        buildGradleFile = FilesTemplate.Factory(GradleFilesTemplate.BuildGradleTemplate, properties.attributes())
             .create("build.gradle", projectRoot)
     }
 
     private fun setupSettingsGradleFile(projectRoot: VirtualFile) {
-        SpaceFileTemplate.Factory(SpaceFileTemplate.SettingsGradleTemplate, properties.attributes())
+        FilesTemplate.Factory(GradleFilesTemplate.SettingsGradleTemplate, properties.attributes())
             .create("settings.gradle", projectRoot)
     }
 
     private fun setupGradlePropertiesFile(projectRoot: VirtualFile) {
-        SpaceFileTemplate.Factory(SpaceFileTemplate.GradlePropertiesTemplate, properties.attributes())
+        FilesTemplate.Factory(GradleFilesTemplate.GradlePropertiesTemplate, properties.attributes())
             .create("gradle.properties", projectRoot)
     }
 
