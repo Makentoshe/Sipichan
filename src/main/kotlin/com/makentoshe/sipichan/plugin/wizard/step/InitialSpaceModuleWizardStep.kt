@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionEvent
 class InitialSpaceModuleWizardStep(
     private val context: WizardContext,
     private val disposable: Disposable,
-    private val wizardBuilder: SpaceWizard2.Builder
+    private val wizard: SpaceWizard
 ) : ModuleWizardStep() {
 
     private lateinit var root: JPanel
@@ -42,12 +42,11 @@ class InitialSpaceModuleWizardStep(
 
         listOptionDescriptionLabel.text = when (list.selectedIndex) {
             0 -> {
-
-                wizardBuilder.projectType = ProjectType.BLANK
+                wizard.projectType = ProjectType.BLANK
                 StringsBundle.string("space.wizard.template.blank.description")
             }
             1 -> {
-                wizardBuilder.projectType = ProjectType.CHATBOT
+                wizard.projectType = ProjectType.CHATBOT
                 StringsBundle.string("space.wizard.template.chatbot.description")
             }
             2 -> {

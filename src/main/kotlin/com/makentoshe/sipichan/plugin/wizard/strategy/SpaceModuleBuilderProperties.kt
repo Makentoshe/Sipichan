@@ -1,20 +1,17 @@
 package com.makentoshe.sipichan.plugin.wizard.strategy
 
-interface SpaceModuleBuilderProperties {
-    val group: String
-    val artifact: String
+import com.makentoshe.sipichan.plugin.wizard.BuildSystem
+
+// TODO join properties with SpaceWizard
+data class SpaceModuleBuilderProperties(
+    val group: String,
+    val artifact: String,
     val version: String
+) {
 
-    fun attributes(): Map<String, String>
-}
+    constructor(buildSystem: BuildSystem) : this(buildSystem.group, buildSystem.artifact, buildSystem.version)
 
-data class GradleSpaceModuleBuilderProperties(
-    override val group: String,
-    override val artifact: String,
-    override val version: String
-) : SpaceModuleBuilderProperties {
-
-    override fun attributes() = mapOf(
+    fun attributes() = mapOf(
         "GRADLE_GROUP_ID" to group,
         "GRADLE_ARTIFACT_ID" to artifact,
         "GRADLE_VERSION" to version

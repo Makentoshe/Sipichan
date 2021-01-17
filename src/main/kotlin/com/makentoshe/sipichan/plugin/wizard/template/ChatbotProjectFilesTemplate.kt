@@ -6,6 +6,7 @@ import com.intellij.ide.fileTemplates.FileTemplate
 object ChatbotProjectFilesTemplate : FilesTemplate() {
 
     /** src/Application.kt file template */
+    // TODO this template may be rewrote by another ProjectFilesTemplate
     val ApplicationKtTemplate: FileTemplate
         get() = getOrCreateTemplate("Application") { name ->
             templateManager.addTemplate(name, "kt").also { template ->

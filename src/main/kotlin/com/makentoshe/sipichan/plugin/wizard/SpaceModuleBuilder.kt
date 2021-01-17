@@ -13,13 +13,11 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.makentoshe.sipichan.plugin.wizard.step.FirstModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SecondModuleWizardStep
-import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderStrategy
 import java.io.File
 
-class SpaceModuleBuilder(
-    private val wizardBuilder: SpaceWizard2.Builder,
-    private val strategy: SpaceModuleBuilderStrategy
-) : ModuleBuilder() {
+class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard) : ModuleBuilder() {
+
+    private val strategy by lazy { wizardBuilder.strategy() }
 
     override fun getModuleType(): ModuleType<*> {
         return SpaceModuleType.getInstance()
@@ -47,9 +45,6 @@ class SpaceModuleBuilder(
         val localFileSystem = LocalFileSystem.getInstance()
         val virtualRootDirectory = localFileSystem.refreshAndFindFileByIoFile(contentRootDirectory) ?: return
         modifiableRootModel.addContentEntry(virtualRootDirectory)
-
-        println(wizardBuilder.buildSystem)
-        println(wizardBuilder.projectType)
 
         strategy.setupRootModel(modifiableRootModel, virtualRootDirectory)
     }
