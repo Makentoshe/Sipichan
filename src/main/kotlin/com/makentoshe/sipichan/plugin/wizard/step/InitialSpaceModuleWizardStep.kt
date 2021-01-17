@@ -15,7 +15,8 @@ import javax.swing.event.ListSelectionEvent
 // https://github.com/JetBrains/intellij-community/blob/master/plugins/gradle/java/src/service/project/wizard/GradleModuleWizardStep.java
 class InitialSpaceModuleWizardStep(
     private val context: WizardContext,
-    private val disposable: Disposable
+    private val disposable: Disposable,
+    private val wizardBuilder: SpaceWizard2.Builder
 ) : ModuleWizardStep() {
 
     private lateinit var root: JPanel
@@ -40,9 +41,18 @@ class InitialSpaceModuleWizardStep(
         if (event.valueIsAdjusting) return
 
         listOptionDescriptionLabel.text = when (list.selectedIndex) {
-            0 -> StringsBundle.string("space.wizard.template.blank.description")
-            1 -> StringsBundle.string("space.wizard.template.chatbot.description")
-            2 -> StringsBundle.string("space.wizard.template.slashcommand.description")
+            0 -> {
+
+                wizardBuilder.projectType = ProjectType.BLANK
+                StringsBundle.string("space.wizard.template.blank.description")
+            }
+            1 -> {
+                wizardBuilder.projectType = ProjectType.CHATBOT
+                StringsBundle.string("space.wizard.template.chatbot.description")
+            }
+            2 -> {
+                StringsBundle.string("space.wizard.template.slashcommand.description")
+            }
             else -> throw IllegalArgumentException()
         }
     }

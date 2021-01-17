@@ -32,14 +32,17 @@ interface SpaceModuleBuilderStrategy {
 
 // TODO move Gradle files
 class GradleSpaceModuleBuilderStrategy(
-    private val properties: GradleSpaceModuleBuilderProperties,
+    private val properties: SpaceModuleBuilderProperties,
     private val sourceProvider: ProjectSourceProvider
 ) : SpaceModuleBuilderStrategy {
 
     private lateinit var virtualRootDirectory: VirtualFile
     private lateinit var buildGradleFile: VirtualFile
 
-    override fun setupRootModel(modifiableRootModel: ModifiableRootModel, virtualRootDirectory: VirtualFile) {
+    override fun setupRootModel(
+        modifiableRootModel: ModifiableRootModel,
+        virtualRootDirectory: VirtualFile
+    ) {
         this.virtualRootDirectory = virtualRootDirectory
 
         setupBuildGradleFile(virtualRootDirectory)

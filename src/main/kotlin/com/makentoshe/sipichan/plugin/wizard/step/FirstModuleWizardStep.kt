@@ -1,19 +1,16 @@
 package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
-import com.intellij.ide.util.projectWizard.WizardContext
-import com.intellij.openapi.roots.ui.configuration.ModulesProvider
+import com.makentoshe.sipichan.plugin.wizard.SpaceWizard2
 import javax.swing.JComponent
 import javax.swing.JLabel
 
-class FirstModuleWizardStep(
-    private val context: WizardContext,
-    private val provider: ModulesProvider
-) : ModuleWizardStep() {
+// TODO step for defining space constants (client id, client secret, verification token, etc)
+class FirstModuleWizardStep(private val wizardBuilder: SpaceWizard2.Builder) : ModuleWizardStep() {
 
     override fun getComponent(): JComponent {
         return JLabel("Put your content here (Step 1)")
     }
 
-    override fun updateDataModel() {}
+    override fun updateDataModel() = Unit
 }

@@ -16,7 +16,10 @@ import com.makentoshe.sipichan.plugin.wizard.step.SecondModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderStrategy
 import java.io.File
 
-class SpaceModuleBuilder(private val strategy: SpaceModuleBuilderStrategy) : ModuleBuilder() {
+class SpaceModuleBuilder(
+    private val wizardBuilder: SpaceWizard2.Builder,
+    private val strategy: SpaceModuleBuilderStrategy
+) : ModuleBuilder() {
 
     override fun getModuleType(): ModuleType<*> {
         return SpaceModuleType.getInstance()
@@ -26,11 +29,11 @@ class SpaceModuleBuilder(private val strategy: SpaceModuleBuilderStrategy) : Mod
         wizardContext: WizardContext,
         modulesProvider: ModulesProvider
     ): Array<ModuleWizardStep> {
-        return arrayOf(FirstModuleWizardStep(wizardContext, modulesProvider), SecondModuleWizardStep())
+        return arrayOf(FirstModuleWizardStep(wizardBuilder), SecondModuleWizardStep(wizardBuilder))
     }
 
     override fun getCustomOptionsStep(context: WizardContext, parentDisposable: Disposable): ModuleWizardStep {
-        return InitialSpaceModuleWizardStep(context, parentDisposable)
+        return InitialSpaceModuleWizardStep(context, parentDisposable, wizardBuilder)
     }
 
     override fun setupRootModel(modifiableRootModel: ModifiableRootModel) {
@@ -44,6 +47,10 @@ class SpaceModuleBuilder(private val strategy: SpaceModuleBuilderStrategy) : Mod
         val localFileSystem = LocalFileSystem.getInstance()
         val virtualRootDirectory = localFileSystem.refreshAndFindFileByIoFile(contentRootDirectory) ?: return
         modifiableRootModel.addContentEntry(virtualRootDirectory)
+
+        println(wizardBuilder.buildSystem)
+        println(wizardBuilder.projectType)
+
         strategy.setupRootModel(modifiableRootModel, virtualRootDirectory)
     }
 

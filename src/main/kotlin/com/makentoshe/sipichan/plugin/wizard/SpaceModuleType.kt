@@ -8,7 +8,7 @@ import com.makentoshe.sipichan.plugin.wizard.strategy.GradleSpaceModuleBuilderPr
 import com.makentoshe.sipichan.plugin.wizard.strategy.GradleSpaceModuleBuilderStrategy
 import javax.swing.Icon
 
-class SpaceModuleType: ModuleType<SpaceModuleBuilder>(id) {
+class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
 
     companion object {
         // TODO(refactor) Specify module id
@@ -17,13 +17,16 @@ class SpaceModuleType: ModuleType<SpaceModuleBuilder>(id) {
         fun getInstance() = ModuleTypeManager.getInstance().findByID(id) as SpaceModuleType
     }
 
+    private val wizardBuilder = SpaceWizard2.Builder()
+
     override fun createModuleBuilder(): SpaceModuleBuilder {
         // TODO add switching between build systems
         // TODO hardcoded (add properties define)
         val gradleProperties = GradleSpaceModuleBuilderProperties("com.makentoshe", "sipichan", "1.0.0")
         val sourceProvider = BlankProjectSourceProvider(gradleProperties)
         val gradleStrategy = GradleSpaceModuleBuilderStrategy(gradleProperties, sourceProvider)
-        return SpaceModuleBuilder(gradleStrategy)
+        // TODO put strategy into wizard builder
+        return SpaceModuleBuilder(wizardBuilder, gradleStrategy)
     }
 
     override fun getName(): String {
