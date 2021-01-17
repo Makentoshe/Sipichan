@@ -1,0 +1,8 @@
+package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
+
+import space.jetbrains.api.runtime.helpers.message
+
+suspend fun commandHelp(context: CallContext) {
+    val message = message { section { text("Soon the help will be shown here!") } }
+    sendMessage(context, message)
+}

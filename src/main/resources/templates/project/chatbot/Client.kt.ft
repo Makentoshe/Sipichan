@@ -1,0 +1,39 @@
+package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
+
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import space.jetbrains.api.runtime.SpaceHttpClient
+import space.jetbrains.api.runtime.resources.chats
+import space.jetbrains.api.runtime.types.*
+import space.jetbrains.api.runtime.withServiceAccountTokenSource
+import space.jetbrains.yana.verifyWithToken
+
+// url of your Space instance
+private val spaceInstanceUrl = TODO("Place your space instance url here")
+
+// copy-paste id, secret, and verification token
+// your app received during registration in Space
+private val spaceClientId = TODO("Place your Space client id")
+private val spaceClientSecret = TODO("Place your client secret")
+private val spaceVerificationToken = TODO("Place your verification token")
+
+// client for communication with Space
+// it uses the Client Credentials auth flow
+val spaceClient by lazy {
+    SpaceHttpClient(HttpClient(CIO)).withServiceAccountTokenSource(spaceClientId, spaceClientSecret, spaceInstanceUrl)
+}
+
+// verification of Space instance
+// compares the token in payload with verificationToken
+fun verifyPayload(payload: ApplicationPayload): Boolean {
+    return payload.verifyWithToken(spaceVerificationToken)
+}
+
+// get user by Id and send message to the user
+// spaceClient gives you access to any Space endpoint
+suspend fun sendMessage(context: CallContext, message: ChatMessage) {
+    spaceClient.chats.messages.sendMessage(
+        MessageRecipient.Member(ProfileIdentifier.Id(context.userId)),
+        message
+    )
+}
