@@ -4,14 +4,15 @@ import com.intellij.openapi.options.SettingsEditor
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class DemoRunConfigurationSettingsEditor: SettingsEditor<DemoRunConfiguration>() {
+class SpaceApplicationRunConfigurationSettingsEditor: SettingsEditor<SpaceApplicationRunConfiguration>() {
+
     private lateinit var panel: JPanel
 
-    override fun resetEditorFrom(s: DemoRunConfiguration) {
+    override fun resetEditorFrom(s: SpaceApplicationRunConfiguration) {
 
     }
 
-    override fun applyEditorTo(s: DemoRunConfiguration) {
+    override fun applyEditorTo(s: SpaceApplicationRunConfiguration) {
 
     }
 

@@ -17,7 +17,7 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <configurationType implementation="com.makentoshe.sipichan.plugin.configuration.DemoRunConfigurationType"/>
+        <configurationType implementation="com.makentoshe.sipichan.plugin.configuration.SpaceApplicationRunConfigurationType"/>
     </extensions>
 
     <actions>
