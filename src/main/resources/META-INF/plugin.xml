@@ -16,6 +16,10 @@
         <moduleType id="DEMO_MODULE_TYPE" implementationClass="com.makentoshe.sipichan.plugin.wizard.SpaceModuleType"/>
     </extensions>
 
+    <extensions defaultExtensionNs="com.intellij">
+        <configurationType implementation="com.makentoshe.sipichan.plugin.configuration.DemoRunConfigurationType"/>
+    </extensions>
+
     <actions>
         <!-- Add your actions here -->
     </actions>
