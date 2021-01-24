@@ -1,12 +1,13 @@
 package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
 
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.response.*
 import io.ktor.routing.*
+import org.slf4j.LoggerFactory
 import space.jetbrains.api.runtime.types.ListCommandsPayload
 import space.jetbrains.api.runtime.types.MessagePayload
 import space.jetbrains.yana.readPayload
@@ -29,19 +30,19 @@ fun Routing.backToSpace() {
             return@post call.respond(HttpStatusCode.Unauthorized)
         }
 
-        val context = getCallContext(payload)
-        // analyze the message payload
-        // MessagePayload = user sends a command
-        // ListCommandsPayload = user types a slash or a char
-         when (payload) {
-            is MessagePayload -> {
-                commandHelp(context)
-                call.respond(HttpStatusCode.OK, "")
+        try {
+            val context = getEchoContext(payload)
+            when (payload) {
+                // MessagePayload = user sends a message
+                is MessagePayload -> {
+                    commandEcho(context)
+                    call.respond(HttpStatusCode.OK, "")
+                }
+                // ListCommandsPayload = user types a slash or a char
+                is ListCommandsPayload -> println("ListCommandsPayload. Do nothing")
             }
-
-            is ListCommandsPayload -> {
-                println("ListCommandsPayload")
-            }
+        } catch (unknownCommand: IllegalStateException) {
+            LoggerFactory.getLogger("EchoChatBot").error(unknownCommand.message)
         }
     }
 }

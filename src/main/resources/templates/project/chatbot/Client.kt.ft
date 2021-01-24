@@ -20,7 +20,9 @@ private val spaceVerificationToken = TODO("Place your verification token")
 // client for communication with Space
 // it uses the Client Credentials auth flow
 val spaceClient by lazy {
-    SpaceHttpClient(HttpClient(CIO)).withServiceAccountTokenSource(spaceClientId, spaceClientSecret, spaceInstanceUrl)
+    SpaceHttpClient(HttpClient(CIO)).withServiceAccountTokenSource(
+        spaceClientId, spaceClientSecret, spaceInstanceUrl
+    )
 }
 
 // verification of Space instance
@@ -31,9 +33,7 @@ fun verifyPayload(payload: ApplicationPayload): Boolean {
 
 // get user by Id and send message to the user
 // spaceClient gives you access to any Space endpoint
-suspend fun sendMessage(context: CallContext, message: ChatMessage) {
-    spaceClient.chats.messages.sendMessage(
-        MessageRecipient.Member(ProfileIdentifier.Id(context.userId)),
-        message
-    )
+suspend fun sendMessage(context: EchoContext, message: ChatMessage) {
+    val member = ProfileIdentifier.Id(context.userId)
+    spaceClient.chats.messages.sendMessage(MessageRecipient.Member(member), message)
 }

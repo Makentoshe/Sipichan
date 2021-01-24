@@ -1,8 +1,16 @@
 package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
 
 import space.jetbrains.api.runtime.helpers.message
+import space.jetbrains.api.runtime.types.ChatMessage
 
-suspend fun commandHelp(context: CallContext) {
-    val message = message { section { text("Soon the help will be shown here!") } }
+suspend fun commandEcho(context: EchoContext) {
+    val body = context.message.body
+
+    val message = if (body is ChatMessage.Text) {
+        message { section { text(body.text) } }
+    } else {
+        message { section { text("Skip the Block body") } }
+    }
+
     sendMessage(context, message)
 }
