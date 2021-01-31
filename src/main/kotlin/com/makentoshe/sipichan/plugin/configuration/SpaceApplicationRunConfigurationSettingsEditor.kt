@@ -1,36 +1,32 @@
 package com.makentoshe.sipichan.plugin.configuration
 
 import com.intellij.openapi.options.SettingsEditor
-import com.intellij.openapi.util.Key
+import com.makentoshe.sipichan.plugin.configuration.SpaceApplicationRunConfiguration.Companion.tunnelingToolKey
+import com.makentoshe.sipichan.plugin.configuration.SpaceApplicationRunConfiguration.Companion.tunnelingToolPathKey
+import com.makentoshe.sipichan.plugin.configuration.model.TunnelingTool
 import com.makentoshe.sipichan.plugin.configuration.model.TunnelingToolComboBoxModel
-import javax.swing.JComboBox
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 
 class SpaceApplicationRunConfigurationSettingsEditor: SettingsEditor<SpaceApplicationRunConfiguration>() {
 
-    companion object {
-        private val tunnelingToolKey = Key<String>("tunneling-tool")
-        private val tunnelingToolPathKey = Key<String>("tunneling-tool-path")
-    }
-
     private lateinit var panel: JPanel
-    private lateinit var tunnelingToolComboBox: JComboBox<Any>
+    private lateinit var tunnelingToolComboBox: JComboBox<TunnelingTool>
     // TODO add tooltip for any selectable tool
     // localtunnel - path to npx
+    // ngrok - path to ngrok.exe or something same
     private lateinit var tunnelingToolPathTextField: JTextField
 
+    // TODO replace hardcoded values
     override fun resetEditorFrom(s: SpaceApplicationRunConfiguration) {
         val tunnelingTool = s.getUserData(tunnelingToolKey) ?: tunnelingToolComboBox.model.getElementAt(0)
         tunnelingToolComboBox.selectedItem = tunnelingTool
 
-        val tunnelingToolPath = s.getUserData(tunnelingToolPathKey) ?: ""
+        val tunnelingToolPath = s.getUserData(tunnelingToolPathKey) ?: "P:\\custom\\nodejs"
         tunnelingToolPathTextField.text = tunnelingToolPath
     }
 
     override fun applyEditorTo(s: SpaceApplicationRunConfiguration) {
-        val tunnelingTool = tunnelingToolComboBox.selectedItem?.toString()
+        val tunnelingTool = tunnelingToolComboBox.selectedItem as TunnelingTool
         s.putUserData(tunnelingToolKey, tunnelingTool)
 
         val tunnelingToolPath = tunnelingToolPathTextField.text
@@ -38,7 +34,7 @@ class SpaceApplicationRunConfigurationSettingsEditor: SettingsEditor<SpaceApplic
     }
 
     override fun createEditor(): JComponent {
-        tunnelingToolComboBox.model = TunnelingToolComboBoxModel()
+        tunnelingToolComboBox.model = TunnelingToolComboBoxModel() as ComboBoxModel<TunnelingTool>
         return panel
     }
 }
