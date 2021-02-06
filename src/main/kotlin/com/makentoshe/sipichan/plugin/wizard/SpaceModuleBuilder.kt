@@ -12,6 +12,7 @@ import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.makentoshe.sipichan.plugin.wizard.step.FirstModuleWizardStep
+import com.makentoshe.sipichan.plugin.wizard.step.InitialSpaceModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SecondModuleWizardStep
 import java.io.File
 

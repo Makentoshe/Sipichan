@@ -1,9 +1,11 @@
-package com.makentoshe.sipichan.plugin.wizard
+package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.Disposable
 import com.makentoshe.sipichan.plugin.StringsBundle
+import com.makentoshe.sipichan.plugin.wizard.ProjectType
+import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
 import com.makentoshe.sipichan.plugin.wizard.model.SpaceTemplateListModel
 import javax.swing.JComponent
 import javax.swing.JLabel

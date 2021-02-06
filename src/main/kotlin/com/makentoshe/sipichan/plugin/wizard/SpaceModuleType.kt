@@ -27,6 +27,7 @@ class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
         return "Example custom module type"
     }
 
+    // TODO(fix) Fix logo icon
     override fun getNodeIcon(isOpened: Boolean): Icon {
         return IconProvider.logo
     }

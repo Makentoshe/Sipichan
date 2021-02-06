@@ -24,7 +24,7 @@ class ChatbotProjectSourceProvider(
 
     private fun createCallContextKtFile(parent: File) {
         val applicationFile = createVirtualFile(parent.path, "CallContext.kt")
-        val applicationContent = ChatbotProjectFilesTemplate.CallContextKtTemplate.getText(properties.attributes())
+        val applicationContent = ChatbotProjectFilesTemplate.EchoContextKtTemplate.getText(properties.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 

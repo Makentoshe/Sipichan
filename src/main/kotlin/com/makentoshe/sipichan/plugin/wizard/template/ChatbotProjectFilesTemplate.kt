@@ -17,8 +17,8 @@ object ChatbotProjectFilesTemplate : FilesTemplate() {
             }
         }
 
-    /** src/CallContext.kt file template */
-    val CallContextKtTemplate: FileTemplate
+    /** src/EchoContext.kt file template */
+    val EchoContextKtTemplate: FileTemplate
         get() = getOrCreateTemplate("EchoContext") { name ->
             templateManager.addTemplate("$prefix$name", "kt").also { template ->
                 val stream = javaClass.classLoader.getResourceAsStream("/templates/project/chatbot/$name.kt.ft")
