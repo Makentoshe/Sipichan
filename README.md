@@ -1,31 +1,26 @@
 # sipichan-plugin
 
-Plugin for IntelliJ Platform
+Plugin for IntelliJ Platform for supporting a Space Application development.
 
-## Getting Started
+This plugin should help to configure and start developing any Space Application you want.
 
-Download links:
+It has several initial projects that can help you understand the basics.
 
-SSH clone URL: ssh://git@git.jetbrains.space/makentoshe/sipichan/sipichan-plugin.git
+## Progress list
 
-HTTPS clone URL: https://git.jetbrains.space/makentoshe/sipichan/sipichan-plugin.git
-
-
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-## Prerequisites
-
-What things you need to install the software and how to install them.
-
-```
-Examples
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a production system.
-
-## Resources
-
-Add links to external resources for this project, such as CI server, bug tracker, etc.
+- [ ] Wizard
+    - [x] Initial step: template choosing
+    - [ ] Space step: helps to register application and configure tokens, api, etc. - in progress
+    - [ ] Build step: helps to configure build system
+- [ ] Templates: repeats [most of the tutorials](https://www.jetbrains.com/help/space/applications.html#types-of-applications)
+    - [x] Blank project
+    - [x] Echo chatbot project
+    - [ ] Slash command chatbot project
+    - [ ] Custom menus
+    - [ ] Client application
+- [ ] Run configuration
+    - [x] Running single ktor application - just use default kotlin run configuration
+    - [ ] Running ktor application with tunneling service
+        - [ ] Localtunnel - in progress
+        - [ ] Ngrok - frozen (requires payments)
+    
