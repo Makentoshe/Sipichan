@@ -61,18 +61,18 @@ class SpaceApplicationRunConfiguration(
     }
 
     // TODO implement starting local tunnel service in background
-    // Example: npx localtunnel --port 8080 --subdomain makentoshe
     private fun getLocaltunnelState(executor: Executor, environment: ExecutionEnvironment): RunProfileState? {
         // todo handle null
         val tunnelingToolPath = getUserData(tunnelingToolPathKey) ?: return null
         val tunnelingToolFile = File(tunnelingToolPath)
         if (tunnelingToolFile.isDirectory && tunnelingToolFile.list()?.contains("npx") == true) {
-            println("Execute localtunnel $tunnelingToolFile")
+            return SpaceApplicationRunProfileState(environment, tunnelingToolFile)
         }
         if (tunnelingToolFile.isFile && tunnelingToolFile.nameWithoutExtension == "npx") {
-            println("Execute localtunnel ${tunnelingToolFile.parentFile}")
+            return SpaceApplicationRunProfileState(environment, tunnelingToolFile.parentFile)
         }
 
         return null
     }
 }
+
