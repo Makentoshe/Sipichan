@@ -12,11 +12,11 @@ import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.makentoshe.sipichan.plugin.wizard.step.InitialSpaceModuleWizardStep
-import com.makentoshe.sipichan.plugin.wizard.step.SecondModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SpaceModuleWizardStep
+import io.ktor.client.*
 import java.io.File
 
-class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard) : ModuleBuilder() {
+class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val client: HttpClient) : ModuleBuilder() {
 
     private val strategy by lazy { wizardBuilder.strategy() }
 
@@ -28,7 +28,7 @@ class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard) : ModuleBuilder
         wizardContext: WizardContext,
         modulesProvider: ModulesProvider
     ): Array<ModuleWizardStep> {
-        return arrayOf(SpaceModuleWizardStep(wizardBuilder), SecondModuleWizardStep(wizardBuilder))
+        return arrayOf(SpaceModuleWizardStep(wizardBuilder, client))//, SecondModuleWizardStep(wizardBuilder))
     }
 
     override fun getCustomOptionsStep(context: WizardContext, parentDisposable: Disposable): ModuleWizardStep {

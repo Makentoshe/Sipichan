@@ -3,19 +3,22 @@ package com.makentoshe.sipichan.plugin.wizard
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.module.ModuleTypeManager
 import com.makentoshe.sipichan.plugin.IconProvider
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
 import javax.swing.Icon
 
 class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
 
     companion object {
         // TODO(refactor) Specify module id
-        private const val id = "DEMO_MODULE_TYPE"
+        private const val id = "SIPICHAN_MODULE"
 
         fun getInstance() = ModuleTypeManager.getInstance().findByID(id) as SpaceModuleType
     }
 
     override fun createModuleBuilder(): SpaceModuleBuilder {
-        return SpaceModuleBuilder(SpaceWizard())
+        val client = HttpClient(CIO)
+        return SpaceModuleBuilder(SpaceWizard(), client)
     }
 
     override fun getName(): String {

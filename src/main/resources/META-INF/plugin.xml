@@ -13,7 +13,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <moduleType id="DEMO_MODULE_TYPE" implementationClass="com.makentoshe.sipichan.plugin.wizard.SpaceModuleType"/>
+        <moduleType id="SIPICHAN_MODULE" implementationClass="com.makentoshe.sipichan.plugin.wizard.SpaceModuleType"/>
     </extensions>
 
     <actions>
