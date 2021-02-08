@@ -3,8 +3,7 @@ package com.makentoshe.sipichan.plugin.wizard
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.module.ModuleTypeManager
 import com.makentoshe.sipichan.plugin.IconProvider
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import okhttp3.OkHttpClient
 import javax.swing.Icon
 
 class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
@@ -17,8 +16,7 @@ class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
     }
 
     override fun createModuleBuilder(): SpaceModuleBuilder {
-        val client = HttpClient(CIO)
-        return SpaceModuleBuilder(SpaceWizard(), client)
+        return SpaceModuleBuilder(SpaceWizard(), OkHttpClient())
     }
 
     override fun getName(): String {

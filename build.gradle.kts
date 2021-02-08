@@ -14,12 +14,10 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
 
-    // Ktor (Http client)
-    // https://github.com/ktorio/ktor
-    val ktor = "1.3.1"
-    implementation("io.ktor:ktor-client-core:$ktor")
-    implementation("io.ktor:ktor-client-cio:$ktor")
-
+    // OkHttp (Http client)
+    // https://github.com/square/okhttp
+    val okhttp = "4.9.0"
+    implementation("com.squareup.okhttp3:okhttp:$okhttp")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/

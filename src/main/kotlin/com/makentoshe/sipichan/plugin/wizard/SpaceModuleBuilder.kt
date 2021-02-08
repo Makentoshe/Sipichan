@@ -13,10 +13,10 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.makentoshe.sipichan.plugin.wizard.step.InitialSpaceModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SpaceModuleWizardStep
-import io.ktor.client.*
+import okhttp3.OkHttpClient
 import java.io.File
 
-class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val client: HttpClient) : ModuleBuilder() {
+class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val client: OkHttpClient) : ModuleBuilder() {
 
     private val strategy by lazy { wizardBuilder.strategy() }
 
