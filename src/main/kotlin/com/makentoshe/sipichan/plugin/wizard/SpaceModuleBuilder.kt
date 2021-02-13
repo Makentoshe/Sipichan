@@ -11,13 +11,17 @@ import com.intellij.openapi.roots.ui.configuration.ModulesProvider
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.makentoshe.sipichan.plugin.wizard.model.CloseableCoroutineScope
 import com.makentoshe.sipichan.plugin.wizard.step.InitialSpaceModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SpaceModuleWizardStep
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import java.io.File
 
 class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val client: OkHttpClient) : ModuleBuilder() {
 
+    private var wizardCoroutineScope = CloseableCoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val strategy by lazy { wizardBuilder.strategy() }
 
     override fun getModuleType(): ModuleType<*> {
@@ -28,7 +32,7 @@ class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val cli
         wizardContext: WizardContext,
         modulesProvider: ModulesProvider
     ): Array<ModuleWizardStep> {
-        return arrayOf(SpaceModuleWizardStep(wizardBuilder, client))//, SecondModuleWizardStep(wizardBuilder))
+        return arrayOf(SpaceModuleWizardStep(wizardBuilder, client, wizardCoroutineScope))//, SecondModuleWizardStep(wizardBuilder))
     }
 
     override fun getCustomOptionsStep(context: WizardContext, parentDisposable: Disposable): ModuleWizardStep {
@@ -48,6 +52,7 @@ class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val cli
         modifiableRootModel.addContentEntry(virtualRootDirectory)
 
         strategy.setupRootModel(modifiableRootModel, virtualRootDirectory)
+        wizardCoroutineScope.close()
     }
 
     override fun setupModule(module: Module) {

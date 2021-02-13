@@ -1,8 +1,12 @@
 package com.makentoshe.sipichan.plugin.wizard.step
 
+import java.net.URL
+
 interface SpaceModuleWizardStepPresenter {
 
-    fun getCurrentSpaceInstanceUrl(): String
+    fun getCurrentSpaceInstanceString(): String
+
+    fun getCurrentSpaceInstanceUrl(): URL?
 
     fun showNetworkCheckProgressBar()
 
@@ -11,4 +15,8 @@ interface SpaceModuleWizardStepPresenter {
     fun showDescription(string: String)
 
     fun hideDescription()
+
+    fun showContent()
+
+    fun hideContent()
 }

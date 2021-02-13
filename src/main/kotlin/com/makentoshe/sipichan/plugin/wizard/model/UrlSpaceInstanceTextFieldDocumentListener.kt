@@ -24,16 +24,10 @@ class UrlSpaceInstanceTextFieldDocumentListener(
 
         timer.cancel()
         try {
-            timer = Timer().apply { schedule(task(isValidUrl(presenter.getCurrentSpaceInstanceUrl())), delay) }
+            timer = Timer().apply { schedule(task(presenter.getCurrentSpaceInstanceUrl()!!), delay) }
         } catch (e: MalformedURLException) {
-            listener.invoke(UrlSpaceInstanceStatus.Failure(presenter.getCurrentSpaceInstanceUrl(), e))
+            listener.invoke(UrlSpaceInstanceStatus.Failure(presenter.getCurrentSpaceInstanceString(), e))
         }
-    }
-
-    private fun isValidUrl(string: String): URL = try {
-        URL(string)
-    } catch (e: MalformedURLException) {
-        URL("https://$string")
     }
 
     private fun task(url: URL) = object : TimerTask() {

@@ -2,22 +2,26 @@ package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
-import com.makentoshe.sipichan.plugin.wizard.model.CloseableCoroutineScope
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceController
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceStatus
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceTextFieldDocumentListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
+import java.awt.Desktop
+import java.net.MalformedURLException
+import java.net.URL
 import javax.swing.*
 
 // TODO step for defining space constants (client id, client secret, verification token, etc)
+
+// Page for creating applications - https://makentoshe.jetbrains.space/manage/applications
 class SpaceModuleWizardStep(
-    private val wizard: SpaceWizard, private val client: OkHttpClient
+    private val wizard: SpaceWizard,
+    private val client: OkHttpClient,
+    private val wizardCoroutineScope: CoroutineScope
 ) : ModuleWizardStep(), SpaceModuleWizardStepPresenter {
 
-    private val coroutineScope = CloseableCoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private val urlSpaceInstanceController = UrlSpaceInstanceController(coroutineScope, client)
+    private val urlSpaceInstanceController = UrlSpaceInstanceController(wizardCoroutineScope, client)
 
     private lateinit var panel: JPanel
     private lateinit var urlSpaceInstanceTextField: JTextField
@@ -25,15 +29,30 @@ class SpaceModuleWizardStep(
     private lateinit var descriptionPanel: JPanel
     private lateinit var descriptionLabel: JLabel
     private lateinit var contentPanel: JPanel
+    private lateinit var gotoCreateNewSpaceApplicationButton: JButton
 
-    override fun getComponent(): JComponent {
-        val listener = UrlSpaceInstanceTextFieldDocumentListener(this, urlSpaceInstanceController) {
-            onUrlSpaceInstanceStatusChange(it)
-        }
-        urlSpaceInstanceTextField.document.addDocumentListener(listener)
-
+    init {
+        networkCheckProgressBar.isIndeterminate = true
         hideNetworkCheckProgressBar()
         hideDescription()
+        hideContent()
+
+        gotoCreateNewSpaceApplicationButton.addActionListener {
+            val url = getCurrentSpaceInstanceUrl() ?: return@addActionListener
+            val u = URL(url.protocol, url.host, "/manage/applications")
+            println(u)
+            Desktop.getDesktop().browse(u.toURI())
+        }
+
+        urlSpaceInstanceTextField.document.addDocumentListener(
+            UrlSpaceInstanceTextFieldDocumentListener(
+                this, urlSpaceInstanceController, ::onUrlSpaceInstanceStatusChange
+            )
+        )
+    }
+
+    override fun getComponent(): JComponent {
+        println("Panel")
         return panel
     }
 
@@ -45,10 +64,12 @@ class SpaceModuleWizardStep(
         is UrlSpaceInstanceStatus.Success -> {
             hideNetworkCheckProgressBar()
             showDescription("Success")
+            showContent()
         }
         is UrlSpaceInstanceStatus.Failure -> {
             showDescription(status.exception.localizedMessage)
             hideNetworkCheckProgressBar()
+            hideContent()
         }
     }
 
@@ -69,12 +90,30 @@ class SpaceModuleWizardStep(
         descriptionPanel.isVisible = false
     }
 
-    override fun getCurrentSpaceInstanceUrl(): String {
+    override fun getCurrentSpaceInstanceString(): String {
         return urlSpaceInstanceTextField.text
+    }
+
+    override fun getCurrentSpaceInstanceUrl() = try {
+        URL(getCurrentSpaceInstanceString())
+    } catch (mue: MalformedURLException) {
+        try {
+            URL("https://${getCurrentSpaceInstanceString()}")
+        } catch (e: MalformedURLException) {
+            null
+        }
+    }
+
+    override fun showContent() {
+        contentPanel.isVisible = true
+    }
+
+    override fun hideContent() {
+        contentPanel.isVisible = false
     }
 
     // called on next step
     override fun updateDataModel() {
-        coroutineScope.close()
+        println("Update")
     }
 }
