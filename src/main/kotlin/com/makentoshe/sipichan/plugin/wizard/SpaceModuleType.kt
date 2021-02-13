@@ -4,6 +4,7 @@ import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.module.ModuleTypeManager
 import com.makentoshe.sipichan.plugin.IconProvider
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import javax.swing.Icon
 
 class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
@@ -16,14 +17,15 @@ class SpaceModuleType : ModuleType<SpaceModuleBuilder>(id) {
     }
 
     override fun createModuleBuilder(): SpaceModuleBuilder {
-        return SpaceModuleBuilder(SpaceWizard(), OkHttpClient())
+        val client = OkHttpClient.Builder().protocols(listOf(Protocol.HTTP_1_1)).build()
+        return SpaceModuleBuilder(SpaceWizard(), client)
     }
 
     override fun getName(): String {
         return "Space Application"
     }
 
-    // TODO(refactor) Specify proper description
+    // TODO(refactor) Specify proper descriptionPanel
     override fun getDescription(): String {
         return "Example custom module type"
     }

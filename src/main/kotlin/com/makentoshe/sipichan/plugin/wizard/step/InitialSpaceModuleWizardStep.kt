@@ -26,7 +26,7 @@ class InitialSpaceModuleWizardStep(
     // Model list described in form file
     private lateinit var list: JList<String>
 
-    // Bottom panel with template description
+    // Bottom panel with template descriptionPanel
     private lateinit var listOptionDescriptionLabel: JLabel
 
     // TODO improve template specify choose

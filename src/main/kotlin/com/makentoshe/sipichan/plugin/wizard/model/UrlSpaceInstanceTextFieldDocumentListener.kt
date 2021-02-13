@@ -1,21 +1,16 @@
 package com.makentoshe.sipichan.plugin.wizard.model
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import com.makentoshe.sipichan.plugin.wizard.step.SpaceModuleWizardStepPresenter
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
-import javax.swing.JTextField
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 class UrlSpaceInstanceTextFieldDocumentListener(
-    private val textField: JTextField,
-    private val client: OkHttpClient,
-    private val scope: CoroutineScope
+    private val presenter: SpaceModuleWizardStepPresenter,
+    private val controller: UrlSpaceInstanceController,
+    private val listener: (UrlSpaceInstanceStatus) -> Unit
 ) : DocumentListener {
     override fun changedUpdate(e: DocumentEvent) = Unit
     override fun insertUpdate(e: DocumentEvent) = internalChangeUpdate(e)
@@ -25,24 +20,23 @@ class UrlSpaceInstanceTextFieldDocumentListener(
     private var timer = Timer()
 
     private fun internalChangeUpdate(e: DocumentEvent) {
+        listener.invoke(UrlSpaceInstanceStatus.Start)
+
         timer.cancel()
-        timer = Timer().apply { schedule(task(isValidUrl(textField.text) ?: return), delay) }
+        try {
+            timer = Timer().apply { schedule(task(isValidUrl(presenter.getCurrentSpaceInstanceUrl())), delay) }
+        } catch (e: MalformedURLException) {
+            listener.invoke(UrlSpaceInstanceStatus.Failure(presenter.getCurrentSpaceInstanceUrl(), e))
+        }
     }
 
-    private fun isValidUrl(string: String): URL? = try {
+    private fun isValidUrl(string: String): URL = try {
         URL(string)
     } catch (e: MalformedURLException) {
-        null
+        URL("https://$string")
     }
 
-    // TODO make head request and define Space
     private fun task(url: URL) = object : TimerTask() {
-        override fun run() {
-            scope.launch(Dispatchers.IO) {
-                val request = Request.Builder().head().url(url).build()
-                val response = client.newCall(request).execute()
-                println(response)
-            }
-        }
+        override fun run() = controller.check(url, listener)
     }
 }

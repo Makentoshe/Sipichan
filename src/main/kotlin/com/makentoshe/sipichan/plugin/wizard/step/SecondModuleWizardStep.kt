@@ -10,7 +10,7 @@ import javax.swing.JLabel
 class SecondModuleWizardStep(private val wizard: SpaceWizard) : ModuleWizardStep() {
 
     override fun getComponent(): JComponent {
-        return JLabel("Put your content here (Step 2)")
+        return JLabel("Put your descriptionPanel here (Step 2)")
     }
 
     override fun updateDataModel() {
