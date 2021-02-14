@@ -4,11 +4,11 @@ import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderProperties
+import com.makentoshe.sipichan.plugin.wizard.BuildConfiguration
 import com.makentoshe.sipichan.plugin.wizard.template.SpaceFilesTemplate
 import java.io.File
 
-abstract class BaseProjectSourceProvider(private val properties: SpaceModuleBuilderProperties): ProjectSourceProvider() {
+abstract class BaseProjectSourceProvider(private val buildConfiguration: BuildConfiguration): ProjectSourceProvider() {
 
     override fun buildProjectSourceFiles(modifiableRootModel: ModifiableRootModel, virtualRootDirectory: VirtualFile) {
         val resourcesDirectory = File(virtualRootDirectory.path, "resources")
@@ -25,13 +25,13 @@ abstract class BaseProjectSourceProvider(private val properties: SpaceModuleBuil
 
     private fun createLogbackXmlFile(parent: File) {
         val applicationFile = createVirtualFile(parent.path, "logback.xml")
-        val applicationContent = SpaceFilesTemplate.LogbackXmlTemplate.getText(properties.attributes())
+        val applicationContent = SpaceFilesTemplate.LogbackXmlTemplate.getText(buildConfiguration.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 
     private fun createApplicationConfFile(parent: File) {
         val applicationFile = createVirtualFile(parent.path, "application.conf")
-        val applicationContent = SpaceFilesTemplate.ApplicationConfTemplate.getText(properties.attributes())
+        val applicationContent = SpaceFilesTemplate.ApplicationConfTemplate.getText(buildConfiguration.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 }

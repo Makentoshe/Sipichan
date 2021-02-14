@@ -1,7 +1,9 @@
 package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
+import com.makentoshe.sipichan.plugin.wizard.ClientCredentialsFlow
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
+import com.makentoshe.sipichan.plugin.wizard.VerificationTokenEndpoint
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceController
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceStatus
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceTextFieldDocumentListener
@@ -30,8 +32,18 @@ class SpaceModuleWizardStep(
     private lateinit var descriptionLabel: JLabel
     private lateinit var contentPanel: JPanel
     private lateinit var gotoCreateNewSpaceApplicationButton: JButton
+
+    private lateinit var credentialsSelectPanel: JPanel
+    private val credentialsButtonGroup = ButtonGroup()
+    private lateinit var clientCredentialsFlowRadioButton: JRadioButton
+
+    private lateinit var clientCredentialsPanel: JPanel
     private lateinit var clientIdTextField: JTextField
     private lateinit var clientSecretTextField: JTextField
+
+    private lateinit var endpointSelectPanel: JPanel
+    private val endpointButtonGroup = ButtonGroup()
+    private lateinit var verificationTokenEndpointRadioButton: JRadioButton
 
     private lateinit var endpointVerificationPanel: JPanel
     private lateinit var verificationTokenTextField: JTextField
@@ -42,11 +54,12 @@ class SpaceModuleWizardStep(
         hideDescription()
         hideContent()
 
+        credentialsButtonGroup.add(clientCredentialsFlowRadioButton)
+        endpointButtonGroup.add(verificationTokenEndpointRadioButton)
+
         gotoCreateNewSpaceApplicationButton.addActionListener {
             val url = getCurrentSpaceInstanceUrl() ?: return@addActionListener
-            val u = URL(url.protocol, url.host, "/manage/applications")
-            println(u)
-            Desktop.getDesktop().browse(u.toURI())
+            Desktop.getDesktop().browse(URL(url.protocol, url.host, "/manage/applications").toURI())
         }
 
         urlSpaceInstanceTextField.document.addDocumentListener(
@@ -56,10 +69,7 @@ class SpaceModuleWizardStep(
         )
     }
 
-    override fun getComponent(): JComponent {
-        println("Panel")
-        return panel
-    }
+    override fun getComponent() = panel
 
     // TODO add normal descriptions
     private fun onUrlSpaceInstanceStatusChange(status: UrlSpaceInstanceStatus) = when (status) {
@@ -117,8 +127,24 @@ class SpaceModuleWizardStep(
         contentPanel.isVisible = false
     }
 
-    // called on next step
     override fun updateDataModel() {
-        println("Update")
+        if (clientCredentialsFlowRadioButton.isSelected) {
+            updateDataModelClientCredentialsFlow()
+        }
+        if (verificationTokenEndpointRadioButton.isSelected) {
+            updateDataModelVerificationTokenEndpoint()
+        }
+    }
+
+    private fun updateDataModelClientCredentialsFlow() {
+        val clientId = clientIdTextField.text
+        val clientSecret = clientSecretTextField.text
+        wizard.clientCredentialsFlow = ClientCredentialsFlow(clientId, clientSecret)
+    }
+
+    private fun updateDataModelVerificationTokenEndpoint() {
+        val verificationToken = verificationTokenTextField.text
+        if (verificationToken.isBlank()) return
+        wizard.verificationTokenEndpoint = VerificationTokenEndpoint(verificationToken)
     }
 }

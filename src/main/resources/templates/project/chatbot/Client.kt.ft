@@ -13,9 +13,9 @@ private val spaceInstanceUrl = TODO("Place your space instance url here")
 
 // copy-paste id, secret, and verification token
 // your app received during registration in Space
-private val spaceClientId = TODO("Place your Space client id")
-private val spaceClientSecret = TODO("Place your client secret")
-private val spaceVerificationToken = TODO("Place your verification token")
+private val spaceClientId = ${CLIENT_CREDENTIALS_CLIENT_ID}
+private val spaceClientSecret = ${CLIENT_CREDENTIALS_CLIENT_SECRET}
+private val spaceVerificationToken = ${ENDPOINT_VERIFICATION_TOKEN}
 
 // client for communication with Space
 // it uses the Client Credentials auth flow
