@@ -30,6 +30,11 @@ class SpaceModuleWizardStep(
     private lateinit var descriptionLabel: JLabel
     private lateinit var contentPanel: JPanel
     private lateinit var gotoCreateNewSpaceApplicationButton: JButton
+    private lateinit var clientIdTextField: JTextField
+    private lateinit var clientSecretTextField: JTextField
+
+    private lateinit var endpointVerificationPanel: JPanel
+    private lateinit var verificationTokenTextField: JTextField
 
     init {
         networkCheckProgressBar.isIndeterminate = true
