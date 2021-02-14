@@ -4,7 +4,6 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.intellij.ide.util.projectWizard.WizardContext
 import com.intellij.openapi.Disposable
 import com.makentoshe.sipichan.plugin.StringsBundle
-import com.makentoshe.sipichan.plugin.wizard.ProjectType
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
 import com.makentoshe.sipichan.plugin.wizard.model.SpaceTemplateListModel
 import javax.swing.JComponent
@@ -44,11 +43,11 @@ class InitialSpaceModuleWizardStep(
 
         listOptionDescriptionLabel.text = when (list.selectedIndex) {
             0 -> {
-                wizard.projectType = ProjectType.BLANK
+                wizard.projectType = SpaceWizard.ProjectType.BLANK
                 StringsBundle.string("space.wizard.template.blank.description")
             }
             1 -> {
-                wizard.projectType = ProjectType.CHATBOT
+                wizard.projectType = SpaceWizard.ProjectType.CHATBOT
                 StringsBundle.string("space.wizard.template.chatbot.description")
             }
             2 -> {

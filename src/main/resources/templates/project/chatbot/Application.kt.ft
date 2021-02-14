@@ -1,4 +1,4 @@
-package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
+package ${GROUP_ID}.${ARTIFACT_ID}
 
 import io.ktor.application.*
 import io.ktor.client.*

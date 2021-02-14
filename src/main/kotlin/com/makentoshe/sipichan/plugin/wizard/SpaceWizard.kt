@@ -6,28 +6,17 @@ import com.makentoshe.sipichan.plugin.wizard.source.ProjectSourceProvider
 import com.makentoshe.sipichan.plugin.wizard.strategy.GradleSpaceModuleBuilderStrategy
 import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderStrategy
 
-enum class ProjectType {
-    BLANK, CHATBOT
-}
-
-sealed class BuildSystem {
-    abstract val group: String
-    abstract val artifact: String
-    abstract val version: String
-
-    data class Gradle(
-        override val group: String,
-        override val artifact: String,
-        override val version: String
-    ) : BuildSystem()
-}
-
+/**
+ * Class contains several settings defined in several steps.
+ * This settings may be used in project initialization and templates inflating.
+ */
 class SpaceWizard(
     var projectType: ProjectType = ProjectType.BLANK,
     var buildSystem: BuildSystem = BuildSystem.Gradle("com.example", "untitled", "0.0.1")
 ) {
 
     val buildConfiguration = BuildConfiguration(buildSystem)
+    var spaceInstance: SpaceInstanceUrl = SpaceInstanceUrl("")
     var clientCredentialsFlow: ClientCredentialsFlow = ClientCredentialsFlow("", "")
     var verificationTokenEndpoint: VerificationTokenEndpoint = VerificationTokenEndpoint("")
 
@@ -50,21 +39,48 @@ class SpaceWizard(
 
     fun attributes() = buildConfiguration.attributes().let { attributes ->
         attributes.plus(clientCredentialsFlow.attributes()).plus(verificationTokenEndpoint.attributes())
+            .plus(spaceInstance.attributes())
+    }
+
+
+    enum class ProjectType {
+        BLANK, CHATBOT
+    }
+
+    sealed class BuildSystem {
+        abstract val group: String
+        abstract val artifact: String
+        abstract val version: String
+
+        data class Gradle(
+            override val group: String,
+            override val artifact: String,
+            override val version: String
+        ) : BuildSystem()
     }
 }
 
 class BuildConfiguration(val group: String, val artifact: String, val version: String) {
 
-    constructor(buildSystem: BuildSystem) : this(buildSystem.group, buildSystem.artifact, buildSystem.version)
+    constructor(buildSystem: SpaceWizard.BuildSystem) : this(buildSystem.group, buildSystem.artifact, buildSystem.version)
 
     fun attributes() = mapOf(
-        "GRADLE_GROUP_ID" to group,
-        "GRADLE_ARTIFACT_ID" to artifact,
-        "GRADLE_VERSION" to version
+        "GROUP_ID" to group,
+        "ARTIFACT_ID" to artifact,
+        "VERSION" to version
     )
 }
 
-// TODO class SpaceInstance(instanceUrl: String)
+class SpaceInstanceUrl(instanceUrl: String) {
+
+    private val instanceUrl = if (instanceUrl.isBlank()) {
+        "TODO(\"Place your Space instance url here\")"
+    } else {
+        "\"$instanceUrl\""
+    }
+
+    fun attributes() = mapOf("SPACE_INSTANCE_URL" to instanceUrl)
+}
 
 class ClientCredentialsFlow(clientId: String, clientSecret: String) {
 
@@ -89,7 +105,7 @@ class ClientCredentialsFlow(clientId: String, clientSecret: String) {
 class VerificationTokenEndpoint(verificationToken: String) {
 
     private val verificationToken = if (verificationToken.isBlank()) {
-        "TODO(\"Place your Space client id\")"
+        "TODO(\"Place your Space verification token\")"
     } else {
         "\"$verificationToken\""
     }

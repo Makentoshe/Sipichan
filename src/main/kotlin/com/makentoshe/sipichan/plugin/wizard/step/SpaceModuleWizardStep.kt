@@ -2,6 +2,7 @@ package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.ClientCredentialsFlow
+import com.makentoshe.sipichan.plugin.wizard.SpaceInstanceUrl
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
 import com.makentoshe.sipichan.plugin.wizard.VerificationTokenEndpoint
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceController
@@ -13,8 +14,6 @@ import java.awt.Desktop
 import java.net.MalformedURLException
 import java.net.URL
 import javax.swing.*
-
-// TODO step for defining space constants (client id, client secret, verification token, etc)
 
 // Page for creating applications - https://makentoshe.jetbrains.space/manage/applications
 class SpaceModuleWizardStep(
@@ -134,6 +133,9 @@ class SpaceModuleWizardStep(
         if (verificationTokenEndpointRadioButton.isSelected) {
             updateDataModelVerificationTokenEndpoint()
         }
+
+        val url = getCurrentSpaceInstanceUrl() ?: return
+        wizard.spaceInstance = SpaceInstanceUrl(URL(url, "").toString() ?: "")
     }
 
     private fun updateDataModelClientCredentialsFlow() {

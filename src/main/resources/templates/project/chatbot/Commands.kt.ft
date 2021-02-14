@@ -1,4 +1,4 @@
-package ${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}
+package ${GROUP_ID}.${ARTIFACT_ID}
 
 import space.jetbrains.api.runtime.helpers.message
 import space.jetbrains.api.runtime.types.ChatMessage

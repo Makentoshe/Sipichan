@@ -11,8 +11,8 @@ buildscript {
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-group '${GRADLE_GROUP_ID}.${GRADLE_ARTIFACT_ID}'
-version '${GRADLE_VERSION}'
+group '${GROUP_ID}.${ARTIFACT_ID}'
+version '${VERSION}'
 mainClassName = "io.ktor.server.cio.EngineMain"
 
 sourceSets {

@@ -1,7 +1,6 @@
 package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
-import com.makentoshe.sipichan.plugin.wizard.BuildSystem
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
 import javax.swing.JComponent
 import javax.swing.JLabel
@@ -14,6 +13,6 @@ class SecondModuleWizardStep(private val wizard: SpaceWizard) : ModuleWizardStep
     }
 
     override fun updateDataModel() {
-        wizard.buildSystem = BuildSystem.Gradle("com.makentoshe", "sipichan", "1.0.0")
+        wizard.buildSystem = SpaceWizard.BuildSystem.Gradle("com.makentoshe", "sipichan", "1.0.0")
     }
 }
