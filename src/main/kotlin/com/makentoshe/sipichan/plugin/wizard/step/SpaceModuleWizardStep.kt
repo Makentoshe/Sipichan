@@ -1,6 +1,7 @@
 package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
+import com.makentoshe.sipichan.plugin.domain
 import com.makentoshe.sipichan.plugin.wizard.ClientCredentialsFlow
 import com.makentoshe.sipichan.plugin.wizard.SpaceInstanceUrl
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
@@ -135,7 +136,7 @@ class SpaceModuleWizardStep(
         }
 
         val url = getCurrentSpaceInstanceUrl() ?: return
-        wizard.spaceInstance = SpaceInstanceUrl(URL(url, "").toString() ?: "")
+        wizard.spaceInstance = SpaceInstanceUrl(url.domain().toString())
     }
 
     private fun updateDataModelClientCredentialsFlow() {

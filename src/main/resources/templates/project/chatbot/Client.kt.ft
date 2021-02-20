@@ -8,8 +8,13 @@ import space.jetbrains.api.runtime.types.*
 import space.jetbrains.api.runtime.withServiceAccountTokenSource
 import space.jetbrains.yana.verifyWithToken
 
-// url of your Space instance
-private val spaceInstanceUrl = ${SPACE_INSTANCE_URL}
+/**
+ * Url of your Space instance.
+ * This value may used for defining Space client using Client Credentials auth flow
+ *
+ * Example: https://instance.jetbrains.space
+ */
+private const val spaceInstanceUrl = ${SPACE_INSTANCE_URL}
 
 // copy-paste id, secret, and verification token
 // your app received during registration in Space
