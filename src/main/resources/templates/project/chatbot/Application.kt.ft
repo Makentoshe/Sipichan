@@ -7,8 +7,11 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.util.pipeline.*
 import org.slf4j.LoggerFactory
+import space.jetbrains.api.runtime.types.ApplicationPayload
 import space.jetbrains.api.runtime.types.ListCommandsPayload
+import space.jetbrains.api.runtime.types.MessageActionPayload
 import space.jetbrains.api.runtime.types.MessagePayload
 import space.jetbrains.yana.readPayload
 
@@ -17,13 +20,13 @@ fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
-    install(Routing){
-        backToSpace()
+    install(Routing) {
+        chatbot()
     }
 }
 
-fun Routing.backToSpace() {
-    post("api/back-to-space") {
+fun Routing.chatbot() {
+    post("api/chatbot") {
         // read payload and verify Space instance
         val payload = readPayload(call.receiveText())
         if (!Endpoint.verify(payload)) {
@@ -31,18 +34,29 @@ fun Routing.backToSpace() {
         }
 
         try {
-            val context = getEchoContext(payload)
-            when (payload) {
-                // MessagePayload = user sends a message
-                is MessagePayload -> {
-                    commandEcho(context)
-                    call.respond(HttpStatusCode.OK, "")
-                }
-                // ListCommandsPayload = user types a slash or a char
-                is ListCommandsPayload -> println("ListCommandsPayload. Do nothing")
-            }
+            processChatbotPayload(payload)
         } catch (unknownCommand: IllegalStateException) {
-            LoggerFactory.getLogger("EchoChatBot").error(unknownCommand.message)
+            LoggerFactory.getLogger("Chatbot").error(unknownCommand.message)
+        }
+    }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.processChatbotPayload(payload: ApplicationPayload) {
+    val context = getEchoContext(payload)
+
+    when (payload) {
+        // MessagePayload = user sends a message
+        is MessagePayload -> {
+            commandEcho(context)
+            call.respond(HttpStatusCode.OK, "")
+        }
+        // MessageActionPayload = ...
+        is MessageActionPayload -> {
+            println("MessageActionPayload. Do nothing")
+        }
+        // ListCommandsPayload = user types a slash or a char
+        is ListCommandsPayload -> {
+            println("ListCommandsPayload. Do nothing")
         }
     }
 }
