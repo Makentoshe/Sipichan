@@ -16,17 +16,13 @@ import space.jetbrains.yana.verifyWithToken
  */
 private const val spaceInstanceUrl = ${SPACE_INSTANCE_URL}
 
-// copy-paste id, secret, and verification token
-// your app received during registration in Space
-private val spaceClientId = ${CLIENT_CREDENTIALS_CLIENT_ID}
-private val spaceClientSecret = ${CLIENT_CREDENTIALS_CLIENT_SECRET}
 private val spaceVerificationToken = ${ENDPOINT_VERIFICATION_TOKEN}
 
 // client for communication with Space
 // it uses the Client Credentials auth flow
 val spaceClient by lazy {
     SpaceHttpClient(HttpClient(CIO)).withServiceAccountTokenSource(
-        spaceClientId, spaceClientSecret, spaceInstanceUrl
+        ClientCredentialsFlow.clientId, ClientCredentialsFlow.clientSecret, spaceInstanceUrl
     )
 }
 
@@ -41,4 +37,23 @@ fun verifyPayload(payload: ApplicationPayload): Boolean {
 suspend fun sendMessage(context: EchoContext, message: ChatMessage) {
     val member = ProfileIdentifier.Id(context.userId)
     spaceClient.chats.messages.sendMessage(MessageRecipient.Member(member), message)
+}
+
+/**
+ * The Client Credentials Flow can be used by a server-side application that
+ * accesses Space on behalf of itself, for example, a chatbot. The application
+ * receives an access token from Space by sending it <i>client_id</i> and <i>client_secret</i>.
+ *
+ * Not all operations may be accessible using the Client Credentials Flow.
+ * Many actions (for example, posting an article draft) require user consent
+ * and cannot be performed with application credentials.
+ *
+ * For actions that should be performed on behalf of the user,
+ * use other authorization flows, for example Resource Owner Password Credentials Flow.
+ */
+object ClientCredentialsFlow {
+
+    const val clientId: String = ${CLIENT_CREDENTIALS_CLIENT_ID}
+
+    const val clientSecret: String = ${CLIENT_CREDENTIALS_CLIENT_SECRET}
 }
