@@ -62,7 +62,11 @@ class SpaceWizard(
 
 class BuildConfiguration(val group: String, val artifact: String, val version: String) {
 
-    constructor(buildSystem: SpaceWizard.BuildSystem) : this(buildSystem.group, buildSystem.artifact, buildSystem.version)
+    constructor(buildSystem: SpaceWizard.BuildSystem) : this(
+        buildSystem.group,
+        buildSystem.artifact,
+        buildSystem.version
+    )
 
     fun attributes() = mapOf(
         "GROUP_ID" to group,
