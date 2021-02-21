@@ -35,6 +35,10 @@ dependencies {
     // https://www.jetbrains.com/help/space/space-sdk.html
     implementation "org.jetbrains:space-sdk-jvm:61400-beta"
 
+    // Jackson
+    // https://github.com/FasterXML/jackson-module-kotlin
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "io.ktor:ktor-server-cio:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"

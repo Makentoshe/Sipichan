@@ -2,6 +2,9 @@ package ${GROUP_ID}.${ARTIFACT_ID}
 
 import space.jetbrains.api.runtime.helpers.message
 import space.jetbrains.api.runtime.types.ChatMessage
+import space.jetbrains.api.runtime.types.CommandDetail
+import space.jetbrains.api.runtime.types.Commands
+import space.jetbrains.api.runtime.types.MessagePayload
 
 suspend fun commandEcho(context: EchoContext) {
     val body = context.message.body
@@ -13,4 +16,29 @@ suspend fun commandEcho(context: EchoContext) {
     }
 
     sendMessage(context, message)
+}
+
+class Command(
+    val name: String,
+    val info: String,
+    val action: suspend (payload: MessagePayload) -> Unit
+) {
+    // part of the protocol - returns info about a command to the chat
+    fun toCommand() = CommandDetail(name, info)
+}
+
+object Commands {
+
+    val help = Command(
+        "help",
+        "Show this help",
+    ) { payload -> println(payload) }
+
+    val other = Command(
+        "other",
+        "Another command that just nothing does",
+    ) { payload -> println(payload) }
+
+    val commands: Commands
+        get() = Commands(listOf(help, other).map { it.toCommand() })
 }

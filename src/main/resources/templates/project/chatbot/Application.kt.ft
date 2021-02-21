@@ -1,5 +1,7 @@
 package ${GROUP_ID}.${ARTIFACT_ID}
 
+
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.application.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -9,10 +11,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 import org.slf4j.LoggerFactory
-import space.jetbrains.api.runtime.types.ApplicationPayload
-import space.jetbrains.api.runtime.types.ListCommandsPayload
-import space.jetbrains.api.runtime.types.MessageActionPayload
-import space.jetbrains.api.runtime.types.MessagePayload
+import space.jetbrains.api.runtime.types.*
 import space.jetbrains.yana.readPayload
 
 fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
@@ -25,6 +24,13 @@ fun Application.module(testing: Boolean = false) {
     }
 }
 
+/**
+ * This method handles POST requests on the /api/chatbot endpoint.
+ *
+ * readPayload(body: String) is the SDK helper function that receives JSON data from Space
+ * and deserializes it into ApplicationPayload.
+ * For example, in our case, the raw data from Space could look like follows:
+ */
 fun Routing.chatbot() {
     post("api/chatbot") {
         // read payload and verify Space instance
@@ -41,22 +47,43 @@ fun Routing.chatbot() {
     }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.processChatbotPayload(payload: ApplicationPayload) {
-    val context = getEchoContext(payload)
-
+/** Performs a simple payload analysis for future processing */
+private suspend fun PipelineContext<*, ApplicationCall>.processChatbotPayload(payload: ApplicationPayload) {
     when (payload) {
         // MessagePayload = user sends a message
         is MessagePayload -> {
-            commandEcho(context)
-            call.respond(HttpStatusCode.OK, "")
+            processChatbotMessagePayload(payload)
         }
         // MessageActionPayload = ...
         is MessageActionPayload -> {
-            println("MessageActionPayload. Do nothing")
+            processChatbotMessageActionPayload(payload)
         }
         // ListCommandsPayload = user types a slash or a char
         is ListCommandsPayload -> {
-            println("ListCommandsPayload. Do nothing")
+            processChatbotListCommandsPayload(payload)
         }
     }
+}
+
+/**
+ * The standard payload that contains the command and command arguments.
+ * Actually, the bot receives MessagePayload when a user types something in the chat and presses Enter.
+ */
+private suspend fun PipelineContext<*, ApplicationCall>.processChatbotMessagePayload(payload: MessagePayload) {
+    println("MessagePayload: $payload")
+    call.respond(HttpStatusCode.OK, "")
+}
+
+private suspend fun processChatbotMessageActionPayload(payload: MessageActionPayload) {
+    println("MessageActionPayload: $payload")
+}
+
+/**
+ * The bot receives this payload when a user hits the / slash button or starts to input command char by char.
+ * The bot must respond with a list of available commands.
+ */
+private suspend fun PipelineContext<*, ApplicationCall>.processChatbotListCommandsPayload(payload: ListCommandsPayload) {
+    println("ListCommandsPayload: $payload")
+    call.respondText(ObjectMapper().writeValueAsString(Commands.commands), ContentType.Application.Json)
+}
 }
