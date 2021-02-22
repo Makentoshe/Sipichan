@@ -6,39 +6,56 @@ import space.jetbrains.api.runtime.types.CommandDetail
 import space.jetbrains.api.runtime.types.Commands
 import space.jetbrains.api.runtime.types.MessagePayload
 
-suspend fun commandEcho(context: EchoContext) {
-    val body = context.message.body
-
-    val message = if (body is ChatMessage.Text) {
-        message { section { text(body.text) } }
-    } else {
-        message { section { text("Skip the Block body") } }
-    }
-
-    sendMessage(context, message)
-}
-
-class Command(
+/**
+ * Class for containing command details and action.
+ */
+data class Command(
     val name: String,
     val info: String,
     val action: suspend (payload: MessagePayload) -> Unit
 ) {
-    // part of the protocol - returns info about a command to the chat
+
+    /**
+     * Part of the protocol - returns info about a command to the chat
+     */
     fun toCommand() = CommandDetail(name, info)
 }
 
+/**
+ * Some kind of utility class for controlling available commands
+ */
 object Commands {
 
     val help = Command(
         "help",
         "Show this help",
-    ) { payload -> println(payload) }
+    ) { payload ->
+        val context = HelpContext.from(payload)
 
-    val other = Command(
-        "other",
-        "Another command that just nothing does",
-    ) { payload -> println(payload) }
+        val message = message { section { text("Help message:") } }
+
+        printToChat(context, message)
+    }
+
+    val echo = Command(
+        "echo",
+        "Echoing the input string",
+    ) { payload ->
+        val context = EchoContext.from(payload)
+
+        val body = context.message.body
+
+        val message = if (body is ChatMessage.Text) {
+            message { section { text(body.text) } }
+        } else {
+            message { section { text("Skip the Block body") } }
+        }
+
+        printToChat(context, message)
+    }
+
+    val list = listOf(help, echo)
 
     val commands: Commands
-        get() = Commands(listOf(help, other).map { it.toCommand() })
+        get() = Commands(list.map { it.toCommand() })
 }

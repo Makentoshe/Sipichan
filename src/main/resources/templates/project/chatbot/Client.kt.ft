@@ -14,7 +14,7 @@ import space.jetbrains.yana.verifyWithToken
  *
  * Example: https://instance.jetbrains.space
  */
-private const val spaceInstanceUrl = ${SPACE_INSTANCE_URL}
+private const val spaceInstanceUrl = "https://makentoshe.jetbrains.space"
 
 /**
  * Client for communication with Space. This implementation uses the Client Credentials auth flow.
@@ -49,9 +49,9 @@ val spaceClient = SpaceHttpClient(HttpClient(CIO)).withServiceAccountTokenSource
  */
 object ClientCredentialsFlow {
 
-    const val clientId: String = ${CLIENT_CREDENTIALS_CLIENT_ID}
+    const val clientId: String = "cfbee418-bac0-45fa-bd8e-191bbd295120"
 
-    const val clientSecret: String = ${CLIENT_CREDENTIALS_CLIENT_SECRET}
+    const val clientSecret: String = "b4bd9f8b8599b39f56a7c54cdd8514165913d08c34aa19da3b926eafebe8c06e"
 }
 
 /**
@@ -76,7 +76,7 @@ object Endpoint {
             "userId": "2kawvQ4F6GM6"
         }
      */
-    const val verificationToken: String = ${ENDPOINT_VERIFICATION_TOKEN}
+    const val verificationToken: String = "eef37259ab2805854593683b9e7776de3615a942cec7892bd2bc228ea1b47d7a"
 
     /**
      * Verification of Space instance
@@ -88,9 +88,12 @@ object Endpoint {
     }
 }
 
-// get user by Id and send message to the user
-// spaceClient gives you access to any Space endpoint
-suspend fun sendMessage(context: EchoContext, message: ChatMessage) {
+/**
+ * This method allows to our bot print a message for selected user which id is provided in [context].
+ *
+ * [spaceClient] gives us access to any Space endpoint.
+ */
+suspend fun printToChat(context: UserContext, message: ChatMessage) {
     val member = ProfileIdentifier.Id(context.userId)
     spaceClient.chats.messages.sendMessage(MessageRecipient.Member(member), message)
 }

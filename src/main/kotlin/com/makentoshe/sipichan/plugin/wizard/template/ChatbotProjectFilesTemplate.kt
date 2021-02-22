@@ -2,7 +2,6 @@ package com.makentoshe.sipichan.plugin.wizard.template
 
 import com.intellij.ide.fileTemplates.FileTemplate
 
-// TODO finish chatbot to be echoing bot
 /** Object provides several file templates for the chatbot project building */
 object ChatbotProjectFilesTemplate : FilesTemplate() {
 
@@ -17,9 +16,9 @@ object ChatbotProjectFilesTemplate : FilesTemplate() {
             }
         }
 
-    /** src/EchoContext.kt file template */
-    val EchoContextKtTemplate: FileTemplate
-        get() = getOrCreateTemplate("EchoContext") { name ->
+    /** src/Context.kt file template */
+    val ContextKtTemplate: FileTemplate
+        get() = getOrCreateTemplate("Context") { name ->
             templateManager.addTemplate("$prefix$name", "kt").also { template ->
                 val stream = javaClass.classLoader.getResourceAsStream("/templates/project/chatbot/$name.kt.ft")
                 template.text = String(stream!!.readBytes())

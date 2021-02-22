@@ -13,7 +13,7 @@ class ChatbotProjectSourceProvider(
         println(spaceWizard.attributes())
 
         createApplicationKtFile(srcDirectoryRoot)
-        createCallContextKtFile(srcDirectoryRoot)
+        createContextKtFile(srcDirectoryRoot)
         createClientKtFile(srcDirectoryRoot)
         createCommandsKtFile(srcDirectoryRoot)
     }
@@ -24,9 +24,9 @@ class ChatbotProjectSourceProvider(
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 
-    private fun createCallContextKtFile(parent: File) {
-        val applicationFile = createVirtualFile(parent.path, "CallContext.kt")
-        val applicationContent = ChatbotProjectFilesTemplate.EchoContextKtTemplate.getText(spaceWizard.attributes())
+    private fun createContextKtFile(parent: File) {
+        val applicationFile = createVirtualFile(parent.path, "Context.kt")
+        val applicationContent = ChatbotProjectFilesTemplate.ContextKtTemplate.getText(spaceWizard.attributes())
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 

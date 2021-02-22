@@ -1,6 +1,5 @@
 package ${GROUP_ID}.${ARTIFACT_ID}
 
-
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.application.*
 import io.ktor.client.*
@@ -12,6 +11,7 @@ import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 import org.slf4j.LoggerFactory
 import space.jetbrains.api.runtime.types.*
+import space.jetbrains.yana.command
 import space.jetbrains.yana.readPayload
 
 fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
@@ -54,10 +54,6 @@ private suspend fun PipelineContext<*, ApplicationCall>.processChatbotPayload(pa
         is MessagePayload -> {
             processChatbotMessagePayload(payload)
         }
-        // MessageActionPayload = ...
-        is MessageActionPayload -> {
-            processChatbotMessageActionPayload(payload)
-        }
         // ListCommandsPayload = user types a slash or a char
         is ListCommandsPayload -> {
             processChatbotListCommandsPayload(payload)
@@ -70,12 +66,9 @@ private suspend fun PipelineContext<*, ApplicationCall>.processChatbotPayload(pa
  * Actually, the bot receives MessagePayload when a user types something in the chat and presses Enter.
  */
 private suspend fun PipelineContext<*, ApplicationCall>.processChatbotMessagePayload(payload: MessagePayload) {
-    println("MessagePayload: $payload")
-    call.respond(HttpStatusCode.OK, "")
-}
-
-private suspend fun processChatbotMessageActionPayload(payload: MessageActionPayload) {
-    println("MessageActionPayload: $payload")
+    Commands.list.find { it.name == payload.command() }?.action?.invoke(payload)
+        ?: return call.respond(HttpStatusCode.NotFound)
+    call.respond(HttpStatusCode.OK)
 }
 
 /**
@@ -83,7 +76,5 @@ private suspend fun processChatbotMessageActionPayload(payload: MessageActionPay
  * The bot must respond with a list of available commands.
  */
 private suspend fun PipelineContext<*, ApplicationCall>.processChatbotListCommandsPayload(payload: ListCommandsPayload) {
-    println("ListCommandsPayload: $payload")
     call.respondText(ObjectMapper().writeValueAsString(Commands.commands), ContentType.Application.Json)
-}
 }
