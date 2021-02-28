@@ -47,3 +47,19 @@ data class HelpContext(override val userId: String): UserContext {
         }
     }
 }
+
+/**
+ * This context is required for interactive ui command.
+ *
+ * It contains [userId] for replying and arguments for defining
+ */
+data class InteractiveContext(override val userId: String): UserContext {
+
+    companion object {
+
+        /** Defines an interactive context from payload */
+        fun from(payload: ApplicationPayload): InteractiveContext {
+            return InteractiveContext(payload.userId!!)
+        }
+    }
+}

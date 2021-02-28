@@ -1,10 +1,9 @@
 package ${GROUP_ID}.${ARTIFACT_ID}
 
 import space.jetbrains.api.runtime.helpers.message
-import space.jetbrains.api.runtime.types.ChatMessage
-import space.jetbrains.api.runtime.types.CommandDetail
+import space.jetbrains.api.runtime.types.*
 import space.jetbrains.api.runtime.types.Commands
-import space.jetbrains.api.runtime.types.MessagePayload
+import space.jetbrains.yana.commandArguments
 
 /**
  * Class for containing command details and action.
@@ -31,10 +30,17 @@ object Commands {
         "Show this help",
     ) { payload ->
         val context = HelpContext.from(payload)
-
-        val message = message { section { text("Help message:") } }
-
-        printToChat(context, message)
+        printToChat(context, message {
+            section {
+                text(
+                    """Help message:
+                    name - Show this help
+                    ${echo.name} - ${echo.info}
+                    ${interactive.name} - ${interactive.info}
+                """.trimIndent()
+                )
+            }
+        })
     }
 
     val echo = Command(
@@ -42,19 +48,47 @@ object Commands {
         "Echoing the input string",
     ) { payload ->
         val context = EchoContext.from(payload)
-
         val body = context.message.body
-
-        val message = if (body is ChatMessage.Text) {
+        printToChat(context, message = if (body is ChatMessage.Text) {
             message { section { text(body.text) } }
         } else {
             message { section { text("Skip the Block body") } }
-        }
-
-        printToChat(context, message)
+        })
     }
 
-    val list = listOf(help, echo)
+    val interactive = Command(
+        "interactive",
+        "Displaying available message interactive elements"
+    ) { payload ->
+        val context = InteractiveContext.from(payload)
+        val arguments = payload.commandArguments()
+        if (arguments == null || arguments.isBlank()) {
+            return@Command printToChat(context, message {
+                section {
+                    text("Specify one of the selected ui elements:\nbutton")
+                }
+            })
+        }
+
+        printToChat(context, message {
+            section {
+                header = "Available message interactive elements"
+                controls {
+                    when (arguments) {
+                        "button" -> {
+                            val action = PostMessageAction("", "Payload")
+                            button("Primary", action, MessageButtonStyle.PRIMARY)
+                            button("Secondary", action, MessageButtonStyle.SECONDARY)
+                            button("Regular", action, MessageButtonStyle.REGULAR)
+                            button("Danger", action, MessageButtonStyle.DANGER)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    val list = listOf(help, echo, interactive)
 
     val commands: Commands
         get() = Commands(list.map { it.toCommand() })
