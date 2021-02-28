@@ -10,12 +10,11 @@ import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderStrategy
  * Class contains several settings defined in several steps.
  * This settings may be used in project initialization and templates inflating.
  */
-class SpaceWizard(
-    var projectType: ProjectType = ProjectType.BLANK,
-    var buildSystem: BuildSystem = BuildSystem.Gradle("com.example", "untitled", "0.0.1")
-) {
+class SpaceWizard(var projectType: ProjectType = ProjectType.BLANK) {
 
-    val buildConfiguration = BuildConfiguration(buildSystem)
+    var buildConfiguration = BuildConfiguration(
+        BuildConfiguration.BuildSystem.GRADLE, "com.example", "untitled", "0.0.1"
+    )
     var spaceInstance: SpaceInstanceUrl = SpaceInstanceUrl("")
     var clientCredentialsFlow: ClientCredentialsFlow = ClientCredentialsFlow("", "")
     var verificationTokenEndpoint: VerificationTokenEndpoint = VerificationTokenEndpoint("")
@@ -31,11 +30,12 @@ class SpaceWizard(
         }
     }
 
-    private fun strategy(properties: BuildConfiguration, provider: ProjectSourceProvider) = when (buildSystem) {
-        is BuildSystem.Gradle -> {
-            GradleSpaceModuleBuilderStrategy(properties, provider)
+    private fun strategy(properties: BuildConfiguration, provider: ProjectSourceProvider) =
+        when (buildConfiguration.system) {
+            BuildConfiguration.BuildSystem.GRADLE -> {
+                GradleSpaceModuleBuilderStrategy(properties, provider)
+            }
         }
-    }
 
     fun attributes() = buildConfiguration.attributes().let { attributes ->
         attributes.plus(clientCredentialsFlow.attributes()).plus(verificationTokenEndpoint.attributes())
@@ -46,75 +46,71 @@ class SpaceWizard(
     enum class ProjectType {
         BLANK, CHATBOT
     }
-
-    sealed class BuildSystem {
-        abstract val group: String
-        abstract val artifact: String
-        abstract val version: String
-
-        data class Gradle(
-            override val group: String,
-            override val artifact: String,
-            override val version: String
-        ) : BuildSystem()
-    }
 }
 
-class BuildConfiguration(val group: String, val artifact: String, val version: String) {
-
-    constructor(buildSystem: SpaceWizard.BuildSystem) : this(
-        buildSystem.group,
-        buildSystem.artifact,
-        buildSystem.version
-    )
+/**
+ * Class contains any information about chosen build system for inflating the templates
+ */
+class BuildConfiguration(
+    val system: BuildSystem,
+    val group: String,
+    val artifact: String,
+    val version: String
+) {
 
     fun attributes() = mapOf(
         "GROUP_ID" to group,
         "ARTIFACT_ID" to artifact,
         "VERSION" to version
     )
+
+    enum class BuildSystem {
+        GRADLE
+    }
 }
 
-class SpaceInstanceUrl(instanceUrl: String) {
+data class SpaceInstanceUrl(val instanceUrl: String) {
 
-    private val instanceUrl = if (instanceUrl.isBlank()) {
+    private val templateInstanceUrl = if (instanceUrl.isBlank()) {
         "TODO(\"Place your Space instance url here\")"
     } else {
         "\"$instanceUrl\""
     }
 
-    fun attributes() = mapOf("SPACE_INSTANCE_URL" to instanceUrl)
+    fun attributes() = mapOf("SPACE_INSTANCE_URL" to templateInstanceUrl)
 }
 
-class ClientCredentialsFlow(clientId: String, clientSecret: String) {
+/** One of available authentication mechanism in Space. They can be used together */
+data class ClientCredentialsFlow(val clientId: String, val clientSecret: String) {
 
-    private val clientId = if (clientId.isBlank()) {
+    private val templateClientId = if (clientId.isBlank()) {
         "TODO(\"Place your Space client id\")"
     } else {
         "\"$clientId\""
     }
 
-    private val clientSecret = if (clientSecret.isBlank()) {
+    private val templateClientSecret = if (clientSecret.isBlank()) {
         "TODO(\"Place your Space client secret\")"
     } else {
         "\"$clientSecret\""
     }
 
     fun attributes() = mapOf(
-        "CLIENT_CREDENTIALS_CLIENT_ID" to clientId,
-        "CLIENT_CREDENTIALS_CLIENT_SECRET" to clientSecret
+        "CLIENT_CREDENTIALS_CLIENT_ID" to templateClientId,
+        "CLIENT_CREDENTIALS_CLIENT_SECRET" to templateClientSecret
     )
 }
 
-class VerificationTokenEndpoint(verificationToken: String) {
+/** One of available verification mechanism in Space. */
+data class VerificationTokenEndpoint(val verificationToken: String) {
 
-    private val verificationToken = if (verificationToken.isBlank()) {
+    private val templateVerificationToken = if (verificationToken.isBlank()) {
         "TODO(\"Place your Space verification token\")"
     } else {
         "\"$verificationToken\""
     }
 
     fun attributes() = mapOf(
-        "ENDPOINT_VERIFICATION_TOKEN" to verificationToken
+        "ENDPOINT_VERIFICATION_TOKEN" to templateVerificationToken
     )
 }

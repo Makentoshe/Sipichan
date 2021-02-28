@@ -12,6 +12,7 @@ import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.makentoshe.sipichan.plugin.wizard.model.CloseableCoroutineScope
+import com.makentoshe.sipichan.plugin.wizard.step.BuildModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.InitialSpaceModuleWizardStep
 import com.makentoshe.sipichan.plugin.wizard.step.SpaceModuleWizardStep
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,10 @@ class SpaceModuleBuilder(private val wizardBuilder: SpaceWizard, private val cli
         wizardContext: WizardContext,
         modulesProvider: ModulesProvider
     ): Array<ModuleWizardStep> {
-        return arrayOf(SpaceModuleWizardStep(wizardBuilder, client, wizardCoroutineScope))//, SecondModuleWizardStep(wizardBuilder))
+        return arrayOf(
+            SpaceModuleWizardStep(wizardBuilder, client, wizardCoroutineScope),
+            BuildModuleWizardStep(wizardBuilder)
+        )
     }
 
     override fun getCustomOptionsStep(context: WizardContext, parentDisposable: Disposable): ModuleWizardStep {
