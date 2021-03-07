@@ -51,7 +51,7 @@ class InitialSpaceModuleWizardStep(
                 StringsBundle.string("space.wizard.template.chatbot.description")
             }
             2 -> {
-                StringsBundle.string("space.wizard.template.slashcommand.description")
+                StringsBundle.string("space.wizard.template.client.description")
             }
             else -> throw IllegalArgumentException()
         }
