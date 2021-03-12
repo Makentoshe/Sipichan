@@ -51,6 +51,7 @@ class InitialSpaceModuleWizardStep(
                 StringsBundle.string("space.wizard.template.chatbot.description")
             }
             2 -> {
+                wizard.projectType = SpaceWizard.ProjectType.CLIENT
                 StringsBundle.string("space.wizard.template.client.description")
             }
             else -> throw IllegalArgumentException()

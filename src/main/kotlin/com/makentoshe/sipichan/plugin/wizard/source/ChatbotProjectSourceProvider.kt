@@ -10,8 +10,6 @@ class ChatbotProjectSourceProvider(
 ): BaseProjectSourceProvider(spaceWizard.buildConfiguration) {
 
     override fun buildSrcFiles(srcDirectoryRoot: File) {
-        println(spaceWizard.attributes())
-
         createApplicationKtFile(srcDirectoryRoot)
         createContextKtFile(srcDirectoryRoot)
         createClientKtFile(srcDirectoryRoot)

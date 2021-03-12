@@ -2,6 +2,7 @@ package com.makentoshe.sipichan.plugin.wizard
 
 import com.makentoshe.sipichan.plugin.wizard.source.BlankProjectSourceProvider
 import com.makentoshe.sipichan.plugin.wizard.source.ChatbotProjectSourceProvider
+import com.makentoshe.sipichan.plugin.wizard.source.ClientProjectSourceProvider
 import com.makentoshe.sipichan.plugin.wizard.source.ProjectSourceProvider
 import com.makentoshe.sipichan.plugin.wizard.strategy.GradleSpaceModuleBuilderStrategy
 import com.makentoshe.sipichan.plugin.wizard.strategy.SpaceModuleBuilderStrategy
@@ -27,6 +28,9 @@ class SpaceWizard(var projectType: ProjectType = ProjectType.BLANK) {
             ProjectType.CHATBOT -> {
                 strategy(buildConfiguration, ChatbotProjectSourceProvider(this))
             }
+            ProjectType.CLIENT -> {
+                strategy(buildConfiguration, ClientProjectSourceProvider(this))
+            }
         }
     }
 
@@ -44,7 +48,7 @@ class SpaceWizard(var projectType: ProjectType = ProjectType.BLANK) {
 
 
     enum class ProjectType {
-        BLANK, CHATBOT
+        BLANK, CHATBOT, CLIENT
     }
 }
 
