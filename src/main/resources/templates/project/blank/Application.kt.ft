@@ -9,5 +9,3 @@ fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 fun Application.module(testing: Boolean = false) {
     // TODO(not implemented)
 }
-
-

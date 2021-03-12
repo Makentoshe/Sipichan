@@ -2,12 +2,20 @@ package ${GROUP_ID}.${ARTIFACT_ID}
 
 import space.jetbrains.api.runtime.types.*
 import space.jetbrains.yana.userId
+import java.lang.IllegalArgumentException
 
 /**
  * This context is required for the chatbot for storing [userId] for replying.
  */
 interface UserContext {
     val userId: String
+}
+
+/**
+ * Factory function for fast [UserContext] creation.
+ */
+fun userContext(applicationPayload: ApplicationPayload) = object: UserContext {
+    override val userId = applicationPayload.userId ?: throw IllegalArgumentException("Payload does not contains user id")
 }
 
 /**

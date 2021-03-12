@@ -34,7 +34,7 @@ object Commands {
             section {
                 text(
                     """Help message:
-                    name - Show this help
+                    help - Show this help
                     ${echo.name} - ${echo.info}
                     ${interactive.name} - ${interactive.info}
                 """.trimIndent()
@@ -76,11 +76,17 @@ object Commands {
                 controls {
                     when (arguments) {
                         "button" -> {
-                            val action = PostMessageAction("", "Payload")
-                            button("Primary", action, MessageButtonStyle.PRIMARY)
-                            button("Secondary", action, MessageButtonStyle.SECONDARY)
-                            button("Regular", action, MessageButtonStyle.REGULAR)
-                            button("Danger", action, MessageButtonStyle.DANGER)
+                            val primaryAction = PostMessageAction("ButtonPrimaryActionId", "InteractiveButtonPayloadPrimary")
+                            button("Primary", primaryAction, MessageButtonStyle.PRIMARY)
+
+                            val secondaryAction = PostMessageAction("ButtonSecondaryActionId", "InteractiveButtonPayloadSecondary")
+                            button("Secondary", secondaryAction, MessageButtonStyle.SECONDARY)
+
+                            val regularAction = PostMessageAction("ButtonRegularActionId", "InteractiveButtonPayloadRegular")
+                            button("Regular", regularAction, MessageButtonStyle.REGULAR)
+
+                            val dangerAction = PostMessageAction("ButtonDangerActionId", "InteractiveButtonPayloadDanger")
+                            button("Danger", dangerAction, MessageButtonStyle.DANGER)
                         }
                     }
                 }

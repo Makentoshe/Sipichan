@@ -14,7 +14,7 @@ import space.jetbrains.yana.verifyWithToken
  *
  * Example: https://instance.jetbrains.space
  */
-private const val spaceInstanceUrl = "https://makentoshe.jetbrains.space"
+private const val spaceInstanceUrl = ${SPACE_INSTANCE_URL}
 
 /**
  * Client for communication with Space. This implementation uses the Client Credentials auth flow.
@@ -49,9 +49,9 @@ val spaceClient = SpaceHttpClient(HttpClient(CIO)).withServiceAccountTokenSource
  */
 object ClientCredentialsFlow {
 
-    const val clientId: String = "cfbee418-bac0-45fa-bd8e-191bbd295120"
+    const val clientId: String = ${CLIENT_CREDENTIALS_CLIENT_ID}
 
-    const val clientSecret: String = "b4bd9f8b8599b39f56a7c54cdd8514165913d08c34aa19da3b926eafebe8c06e"
+    const val clientSecret: String = ${CLIENT_CREDENTIALS_CLIENT_SECRET}
 }
 
 /**
@@ -76,7 +76,7 @@ object Endpoint {
             "userId": "2kawvQ4F6GM6"
         }
      */
-    const val verificationToken: String = "eef37259ab2805854593683b9e7776de3615a942cec7892bd2bc228ea1b47d7a"
+    const val verificationToken: String = ${ENDPOINT_VERIFICATION_TOKEN}
 
     /**
      * Verification of Space instance

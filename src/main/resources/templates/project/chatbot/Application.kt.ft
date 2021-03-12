@@ -10,6 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 import org.slf4j.LoggerFactory
+import space.jetbrains.api.runtime.helpers.message
 import space.jetbrains.api.runtime.types.*
 import space.jetbrains.yana.command
 import space.jetbrains.yana.readPayload
@@ -54,6 +55,10 @@ private suspend fun PipelineContext<*, ApplicationCall>.processChatbotPayload(pa
         is MessagePayload -> {
             processChatbotMessagePayload(payload)
         }
+        // MessageActionPayload = user interacts with interactive element in chat
+        is MessageActionPayload -> {
+            processChatbotMessageActionPayload(payload)
+        }
         // ListCommandsPayload = user types a slash or a char
         is ListCommandsPayload -> {
             processChatbotListCommandsPayload(payload)
@@ -72,9 +77,18 @@ private suspend fun PipelineContext<*, ApplicationCall>.processChatbotMessagePay
 }
 
 /**
- * The bot receives this payload when a user hits the / slash button or starts to input command char by char.
+ * The bot receives this payload when a user hits the / slash button and starts to input command char by char.
  * The bot must respond with a list of available commands.
  */
 private suspend fun PipelineContext<*, ApplicationCall>.processChatbotListCommandsPayload(payload: ListCommandsPayload) {
     call.respondText(ObjectMapper().writeValueAsString(Commands.commands), ContentType.Application.Json)
+}
+
+/**
+ * This payload receives after the user performs an interaction with the last interactive element in the chat.
+ * For the previous elements their data will be erased (for example, their actionId will be always an empty string)
+ */
+private suspend fun PipelineContext<*, ApplicationCall>.processChatbotMessageActionPayload(payload: MessageActionPayload) {
+    printToChat(userContext(payload), message { section { text(payload.actionId) } })
+    call.respond(HttpStatusCode.OK)
 }
