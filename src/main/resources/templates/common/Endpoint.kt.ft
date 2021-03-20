@@ -1,0 +1,18 @@
+package ${GROUP_ID}.${ARTIFACT_ID}
+
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import space.jetbrains.api.runtime.SpaceHttpClient
+import space.jetbrains.api.runtime.resources.chats
+import space.jetbrains.api.runtime.types.*
+import space.jetbrains.api.runtime.withServiceAccountTokenSource
+import space.jetbrains.yana.verifyWithToken
+
+/**
+ * If your application (for example, a chatbot) must receive requests from Space,
+ * it should be able to verify whether the incoming requests are authentic.
+ */
+object Endpoint {
+
+    ${ENDPOINT_VERIFICATION_TOKEN_PLACEHOLDER}${ENDPOINT_SIGNING_KEY_PLACEHOLDER}
+}

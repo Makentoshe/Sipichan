@@ -20,6 +20,8 @@ class SpaceWizard(var projectType: ProjectType = ProjectType.BLANK) {
     var clientCredentialsFlow: ClientCredentialsFlow = ClientCredentialsFlow("", "")
     var verificationTokenEndpoint: VerificationTokenEndpoint = VerificationTokenEndpoint("")
 
+    var endpoints: SpaceEndpoints? = null
+
     fun strategy(): SpaceModuleBuilderStrategy {
         return when (projectType) {
             ProjectType.BLANK -> {
@@ -73,6 +75,7 @@ class BuildConfiguration(
     }
 }
 
+/** Requireable parameter */
 data class SpaceInstanceUrl(val instanceUrl: String) {
 
     private val templateInstanceUrl = if (instanceUrl.isBlank()) {
@@ -117,4 +120,26 @@ data class VerificationTokenEndpoint(val verificationToken: String) {
     fun attributes() = mapOf(
         "ENDPOINT_VERIFICATION_TOKEN" to templateVerificationToken
     )
+}
+
+/** Available verification mechanisms in Space */
+data class SpaceEndpoints(val verificationToken: String?, val signingKey: String?) {
+
+    private val templateVerificationToken = verificationToken?.let { "\"$verificationToken\"" }
+
+    private val templateSigningKey = signingKey?.let { "\"$verificationToken\"" }
+
+    fun attributes(): Map<String, String> {
+        val map = HashMap<String, String>()
+        templateVerificationToken?.let { map[VERIFICATION_TOKEN_KEY] = it }
+        templateSigningKey?.let { map[SIGNING_KEY_KEY] = it }
+        return map
+    }
+
+    companion object {
+        const val VERIFICATION_TOKEN_KEY = "ENDPOINT_VERIFICATION_TOKEN"
+        const val SIGNING_KEY_KEY = "ENDPOINT_SIGNING_KEY"
+        const val VERIFICATION_TOKEN_PLACEHOLDER = "ENDPOINT_VERIFICATION_TOKEN_PLACEHOLDER"
+        const val SIGNING_KEY_PLACEHOLDER = "ENDPOINT_SIGNING_KEY_PLACEHOLDER"
+    }
 }

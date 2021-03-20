@@ -2,10 +2,7 @@ package com.makentoshe.sipichan.plugin.wizard.step
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep
 import com.makentoshe.sipichan.plugin.domain
-import com.makentoshe.sipichan.plugin.wizard.ClientCredentialsFlow
-import com.makentoshe.sipichan.plugin.wizard.SpaceInstanceUrl
-import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
-import com.makentoshe.sipichan.plugin.wizard.VerificationTokenEndpoint
+import com.makentoshe.sipichan.plugin.wizard.*
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceController
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceStatus
 import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceTextFieldDocumentListener
@@ -145,9 +142,9 @@ class SpaceModuleWizardStep(
         wizard.clientCredentialsFlow = ClientCredentialsFlow(clientId, clientSecret)
     }
 
+    // TODO add signing key
     private fun updateDataModelVerificationTokenEndpoint() {
-        val verificationToken = verificationTokenTextField.text
-        if (verificationToken.isBlank()) return
-        wizard.verificationTokenEndpoint = VerificationTokenEndpoint(verificationToken)
+        val verificationToken = verificationTokenTextField.text.let { if (it.isBlank()) null else it }
+        wizard.endpoints = SpaceEndpoints(verificationToken, null)
     }
 }

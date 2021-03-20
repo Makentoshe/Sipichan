@@ -55,40 +55,6 @@ object ClientCredentialsFlow {
 }
 
 /**
- * If your application (for example, a chatbot) must receive requests from Space,
- * it should be able to verify whether the incoming requests are authentic.
- */
-object Endpoint {
-
-    /**
-     * The application compares a verification token in the request
-     * to the verification token stored in the application. This method is easier
-     * to implement but is less secure than the <i>Signing key</i>.
-     */
-    /*
-        When Space sends a request to your application, it puts this verification
-        token in the request body. For example, this is how the body of a slash
-        command request looks like (a user presses / in the chatbot's channel):
-        {
-            "className": "ListCommandsPayload",
-            "accessToken": "",
-            "verificationToken": "d415ca5965b37f4f0cac59fd33de7b94e396284e897d0fb8a070d0a5e1b7f2d3",
-            "userId": "2kawvQ4F6GM6"
-        }
-     */
-    const val verificationToken: String = ${ENDPOINT_VERIFICATION_TOKEN}
-
-    /**
-     * Verification of Space instance
-     *
-     * Compares the token in payload with the verification token
-     */
-    fun verify(payload: ApplicationPayload): Boolean {
-        return payload.verifyWithToken(verificationToken)
-    }
-}
-
-/**
  * This method allows to our bot print a message for selected user which id is provided in [context].
  *
  * [spaceClient] gives us access to any Space endpoint.
