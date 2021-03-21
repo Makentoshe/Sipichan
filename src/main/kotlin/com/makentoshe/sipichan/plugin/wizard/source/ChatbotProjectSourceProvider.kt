@@ -33,7 +33,6 @@ class ChatbotProjectSourceProvider(
             ApplicationFilesTemplate.ApplicationSigningKeyTemplate.getText(attributes)
         } else ""
 
-
         val applicationFile = createVirtualFile(parent.path, "Application.kt")
         val applicationContent = ApplicationFilesTemplate.ApplicationKtTemplate.getText(attributes)
         VfsUtil.saveText(applicationFile, applicationContent)

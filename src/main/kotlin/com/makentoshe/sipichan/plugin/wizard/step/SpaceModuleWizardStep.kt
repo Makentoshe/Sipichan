@@ -41,10 +41,13 @@ class SpaceModuleWizardStep(
 
     private lateinit var endpointSelectPanel: JPanel
     private lateinit var endpointVerificationTokenPanel: JPanel
+    private lateinit var endpointSigningKeyPanel: JPanel
 
-    private lateinit var verificationTokenPanel: JPanel
     private lateinit var verificationTokenEndpointCheckBox: JCheckBox
-    private lateinit var verificationTokenTextField: JTextField
+    private lateinit var verificationTokenEndpointTextField: JTextField
+
+    private lateinit var signingKeyEndpointCheckBox: JCheckBox
+    private lateinit var signingKeyEndpointTextField: JTextField
 
     init {
         networkCheckProgressBar.isIndeterminate = true
@@ -67,6 +70,10 @@ class SpaceModuleWizardStep(
 
         verificationTokenEndpointCheckBox.addItemListener {
             endpointVerificationTokenPanel.isVisible = it.stateChange == SELECTED
+        }
+
+        signingKeyEndpointCheckBox.addItemListener {
+            endpointSigningKeyPanel.isVisible = it.stateChange == SELECTED
         }
     }
 
@@ -146,9 +153,9 @@ class SpaceModuleWizardStep(
         wizard.clientCredentialsFlow = ClientCredentialsFlow(clientId, clientSecret)
     }
 
-    // TODO add signing key
     private fun updateDataModelVerificationTokenEndpoint() {
-        val verificationToken = if (endpointVerificationTokenPanel.isVisible) verificationTokenTextField.text else null
-        wizard.endpoints = SpaceEndpoints(verificationToken, null)
+        val verificationToken = if (endpointVerificationTokenPanel.isVisible) verificationTokenEndpointTextField.text else null
+        val signingKey = if(endpointSigningKeyPanel.isVisible) signingKeyEndpointTextField.text else null
+        wizard.endpoints = SpaceEndpoints(verificationToken, signingKey)
     }
 }
