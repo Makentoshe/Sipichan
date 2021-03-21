@@ -4,6 +4,8 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.makentoshe.sipichan.plugin.wizard.SpaceEndpoints
 import com.makentoshe.sipichan.plugin.wizard.SpaceWizard
 import com.makentoshe.sipichan.plugin.wizard.template.ChatbotProjectFilesTemplate
+import com.makentoshe.sipichan.plugin.wizard.template.FilesTemplate
+import com.makentoshe.sipichan.plugin.wizard.template.common.ApplicationFilesTemplate
 import com.makentoshe.sipichan.plugin.wizard.template.common.EndpointFilesTemplate
 import java.io.File
 
@@ -20,8 +22,20 @@ class ChatbotProjectSourceProvider(
     }
 
     private fun createApplicationKtFile(parent: File) {
+        val endpoints = spaceWizard.endpoints
+        val attributes = HashMap(spaceWizard.buildConfiguration.attributes())
+
+        attributes[FilesTemplate.APPLICATION_VERIFICATION_TOKEN_PLACEHOLDER] = if(endpoints?.verificationToken != null) {
+            ApplicationFilesTemplate.ApplicationVerificationTokenTemplate.getText(attributes)
+        } else ""
+
+        attributes[FilesTemplate.APPLICATION_SIGNING_KEY_PLACEHOLDER] = if(endpoints?.signingKey != null) {
+            ApplicationFilesTemplate.ApplicationSigningKeyTemplate.getText(attributes)
+        } else ""
+
+
         val applicationFile = createVirtualFile(parent.path, "Application.kt")
-        val applicationContent = ChatbotProjectFilesTemplate.ApplicationKtTemplate.getText(spaceWizard.attributes())
+        val applicationContent = ApplicationFilesTemplate.ApplicationKtTemplate.getText(attributes)
         VfsUtil.saveText(applicationFile, applicationContent)
     }
 

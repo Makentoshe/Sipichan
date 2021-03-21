@@ -18,7 +18,6 @@ class SpaceWizard(var projectType: ProjectType = ProjectType.BLANK) {
     )
     var spaceInstance: SpaceInstanceUrl = SpaceInstanceUrl("")
     var clientCredentialsFlow: ClientCredentialsFlow = ClientCredentialsFlow("", "")
-    var verificationTokenEndpoint: VerificationTokenEndpoint = VerificationTokenEndpoint("")
 
     var endpoints: SpaceEndpoints? = null
 
@@ -44,8 +43,7 @@ class SpaceWizard(var projectType: ProjectType = ProjectType.BLANK) {
         }
 
     fun attributes() = buildConfiguration.attributes().let { attributes ->
-        attributes.plus(clientCredentialsFlow.attributes()).plus(verificationTokenEndpoint.attributes())
-            .plus(spaceInstance.attributes())
+        attributes.plus(clientCredentialsFlow.attributes()).plus(spaceInstance.attributes())
     }
 
 
@@ -108,26 +106,16 @@ data class ClientCredentialsFlow(val clientId: String, val clientSecret: String)
     )
 }
 
-/** One of available verification mechanism in Space. */
-data class VerificationTokenEndpoint(val verificationToken: String) {
-
-    private val templateVerificationToken = if (verificationToken.isBlank()) {
-        "TODO(\"Place your Space verification token\")"
-    } else {
-        "\"$verificationToken\""
-    }
-
-    fun attributes() = mapOf(
-        "ENDPOINT_VERIFICATION_TOKEN" to templateVerificationToken
-    )
-}
-
 /** Available verification mechanisms in Space */
 data class SpaceEndpoints(val verificationToken: String?, val signingKey: String?) {
 
-    private val templateVerificationToken = verificationToken?.let { "\"$verificationToken\"" }
+    private val templateVerificationToken = verificationToken?.let {
+        if (it.isNotBlank()) "\"$verificationToken\"" else "TODO(\"place your verification token\")"
+    }
 
-    private val templateSigningKey = signingKey?.let { "\"$verificationToken\"" }
+    private val templateSigningKey = signingKey?.let {
+        if(it.isNotBlank()) "\"$signingKey\""  else "TODO(\"place your signing key\")"
+    }
 
     fun attributes(): Map<String, String> {
         val map = HashMap<String, String>()

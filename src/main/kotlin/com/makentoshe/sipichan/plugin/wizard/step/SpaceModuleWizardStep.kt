@@ -9,6 +9,7 @@ import com.makentoshe.sipichan.plugin.wizard.model.UrlSpaceInstanceTextFieldDocu
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
 import java.awt.Desktop
+import java.awt.event.ItemEvent.SELECTED
 import java.net.MalformedURLException
 import java.net.URL
 import javax.swing.*
@@ -39,10 +40,10 @@ class SpaceModuleWizardStep(
     private lateinit var clientSecretTextField: JTextField
 
     private lateinit var endpointSelectPanel: JPanel
-    private val endpointButtonGroup = ButtonGroup()
-    private lateinit var verificationTokenEndpointRadioButton: JRadioButton
+    private lateinit var endpointVerificationTokenPanel: JPanel
 
-    private lateinit var endpointVerificationPanel: JPanel
+    private lateinit var verificationTokenPanel: JPanel
+    private lateinit var verificationTokenEndpointCheckBox: JCheckBox
     private lateinit var verificationTokenTextField: JTextField
 
     init {
@@ -52,7 +53,6 @@ class SpaceModuleWizardStep(
         hideContent()
 
         credentialsButtonGroup.add(clientCredentialsFlowRadioButton)
-        endpointButtonGroup.add(verificationTokenEndpointRadioButton)
 
         gotoCreateNewSpaceApplicationButton.addActionListener {
             val url = getCurrentSpaceInstanceUrl() ?: return@addActionListener
@@ -64,6 +64,10 @@ class SpaceModuleWizardStep(
                 this, urlSpaceInstanceController, ::onUrlSpaceInstanceStatusChange
             )
         )
+
+        verificationTokenEndpointCheckBox.addItemListener {
+            endpointVerificationTokenPanel.isVisible = it.stateChange == SELECTED
+        }
     }
 
     override fun getComponent() = panel
@@ -128,7 +132,7 @@ class SpaceModuleWizardStep(
         if (clientCredentialsFlowRadioButton.isSelected) {
             updateDataModelClientCredentialsFlow()
         }
-        if (verificationTokenEndpointRadioButton.isSelected) {
+        if (verificationTokenEndpointCheckBox.isSelected) {
             updateDataModelVerificationTokenEndpoint()
         }
 
@@ -144,7 +148,7 @@ class SpaceModuleWizardStep(
 
     // TODO add signing key
     private fun updateDataModelVerificationTokenEndpoint() {
-        val verificationToken = verificationTokenTextField.text.let { if (it.isBlank()) null else it }
+        val verificationToken = if (endpointVerificationTokenPanel.isVisible) verificationTokenTextField.text else null
         wizard.endpoints = SpaceEndpoints(verificationToken, null)
     }
 }

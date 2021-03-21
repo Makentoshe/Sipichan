@@ -1,0 +1,8 @@
+
+        val timestamp = call.request.headers["x-space-timestamp"]
+            ?: return@post call.respond(HttpStatusCode.BadRequest)
+        val signature = call.request.headers["x-space-signature"]
+            ?: return@post call.respond(HttpStatusCode.BadRequest)
+        if (!Endpoint.verify(timestamp, signature, receiveBody)) {
+            return@post call.respond(HttpStatusCode.Unauthorized)
+        }

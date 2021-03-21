@@ -51,4 +51,9 @@ abstract class FilesTemplate {
             Files.createFile(file)
         }
     }
+
+    companion object {
+        const val APPLICATION_VERIFICATION_TOKEN_PLACEHOLDER = "APPLICATION_VERIFICATION_TOKEN_PLACEHOLDER"
+        const val APPLICATION_SIGNING_KEY_PLACEHOLDER = "APPLICATION_SIGNING_KEY_PLACEHOLDER"
+    }
 }

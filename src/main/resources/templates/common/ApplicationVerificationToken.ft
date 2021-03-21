@@ -1,0 +1,4 @@
+
+        if (!Endpoint.verify(payload)) {
+            return@post call.respond(HttpStatusCode.Unauthorized)
+        }
