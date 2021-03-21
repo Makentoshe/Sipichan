@@ -1,18 +1,18 @@
-/**
- * The application calculates a hash for request and compares the result with the hash from the request.
- */
-const val signingKey: String = ${ENDPOINT_SIGNING_KEY}
+    /**
+     * The application calculates a hash for request and compares the result with the hash from the request.
+     */
+    const val signingKey: String = ${ENDPOINT_SIGNING_KEY}
 
-/**
- * Verification of Space instance
- *
- * Calculates a hash from the signing key and compares with the hash from the call
- */
-fun verify(timestamp: String, signature: String, body: String): Boolean {
-    val hmacSha256 = Mac.getInstance("HmacSHA256")
-    hmacSha256.init(SecretKeySpec(signingKey.toByteArray(), "HmacSHA256"))
-    val hash = hmacSha256.doFinal("$timestamp:$body".toByteArray()).toHexString()
-    return hash == signature
-}
+    /**
+     * Verification of Space instance
+     *
+     * Calculates a hash from the signing key and compares with the hash from the call
+     */
+    fun verify(timestamp: String, signature: String, body: String): Boolean {
+        val hmacSha256 = Mac.getInstance("HmacSHA256")
+        hmacSha256.init(SecretKeySpec(signingKey.toByteArray(), "HmacSHA256"))
+        val hash = hmacSha256.doFinal("$timestamp:$body".toByteArray()).toHexString()
+        return hash == signature
+    }
 
-private fun ByteArray.toHexString() = joinToString("") { (0xFF and it.toInt()).toString(16).padStart(2, '0') }
+    private fun ByteArray.toHexString() = joinToString("") { (0xFF and it.toInt()).toString(16).padStart(2, '0') }
